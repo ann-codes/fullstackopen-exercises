@@ -1,0 +1,20 @@
+title 0.6 New Note in SPA
+
+note over Browser:
+User clicks to submit, the Browser will 
+send the input to the Server.
+end note
+
+note over Browser:
+Browser will execute event handlers to 
+display the HTML (via JS) on the page.
+end note
+
+Browser->Server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+
+note over Server:
+preventDefault() will not redirect the page.
+end note
+
+Server-->Browser: HTTP status code 201,response {"message":"note created"}
+

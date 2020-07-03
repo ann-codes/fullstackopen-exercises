@@ -1,0 +1,21 @@
+title 0.5 Single page app
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+Server-->Browser: HTML with no data
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+Server-->Browser: main.css
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+Server-->Browser: spa.js
+
+note over Browser:
+Browser executes JS that requests from data.json
+end note
+
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: data.json
+
+note over Browser:
+Browser executes event handler to render data.json to display
+end note
