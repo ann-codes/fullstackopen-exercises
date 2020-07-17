@@ -3,11 +3,13 @@ import Part from "./Part";
 
 // part 1.2
 const Content = (props) => {
+
+  // part 1.4
+  const mappedParts = props.parts.map(part => <Part part={part} />)
+
   return (
     <Fragment>
-      <Part part={props.part1} />
-      <Part part={props.part2} />
-      <Part part={props.part3} />
+      {mappedParts}
     </Fragment>
   );
 };
