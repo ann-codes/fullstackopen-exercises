@@ -29,7 +29,6 @@ const App = () => {
       <p>All: {all}</p>
       <p>Average: {average?average:0}%</p>
       <p>Positive: {positive?positive:0}%</p>
-
     </div>
   );
 };
