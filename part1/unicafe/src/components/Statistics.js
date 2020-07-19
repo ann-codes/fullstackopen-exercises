@@ -20,12 +20,16 @@ const Statistics = (props) => {
   return (
     <Fragment>
       <h1>Statistics</h1>
-      <Stat text="Good" value={good}/>
-      <Stat text="Neutral" value={neutral}/>
-      <Stat text="Bad" value={bad}/>
-      <Stat text="All" value={all}/>
-      <Stat text="Average" value={average ? average : 0}/>
-      <Stat text="Positive" value={(positive ? positive : 0) + "%"}/>
+      <table>
+        <tbody>
+          <Stat text="Good" value={good} />
+          <Stat text="Neutral" value={neutral} />
+          <Stat text="Bad" value={bad} />
+          <Stat text="All" value={all} />
+          <Stat text="Average" value={average ? average : 0} />
+          <Stat text="Positive" value={(positive ? positive : 0) + "%"} />
+        </tbody>
+      </table>
     </Fragment>
   );
 };
