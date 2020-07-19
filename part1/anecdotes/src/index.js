@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import Button from "./components/Button";
+import App from "./components/App"
 
 const anecdotes = [
   "If it hurts, do it more often",
@@ -10,21 +10,5 @@ const anecdotes = [
   "Premature optimization is the root of all evil.",
   "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
 ];
-
-const App = (props) => {
-  const [selected, setSelected] = useState(0);
-
-  const getRandIndex = () => {
-    const randIndex = Math.floor(anecdotes.length * Math.random());
-    setSelected(randIndex);
-  };
-
-  return (
-    <div>
-      <p>{props.anecdotes[selected]}</p>
-      <Button handleClick={getRandIndex} buttonName="Next Anecdote" />
-    </div>
-  );
-};
 
 ReactDOM.render(<App anecdotes={anecdotes} />, document.getElementById("root"));
