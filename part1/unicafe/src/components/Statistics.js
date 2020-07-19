@@ -7,6 +7,15 @@ const Statistics = (props) => {
   const average = (good * 1 + bad * -1) / all;
   const positive = (good / all) * 100;
 
+  if (!good && !neutral && !bad) {
+    return (
+      <Fragment>
+        <h1>Statistics</h1>
+        <p>No feedback given</p>
+      </Fragment>
+    );
+  }
+
   return (
     <Fragment>
       <h1>Statistics</h1>
