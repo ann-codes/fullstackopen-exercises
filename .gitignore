@@ -11,3 +11,8 @@ yarn-debug.log*
 yarn-error.log*
 
 /trash_folder
+
+
+# to work on diff comps
+yarn.lock
+package-lock.json
