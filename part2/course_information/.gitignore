@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# to work on diff comps
+yarn.lock
+package-lock.json
