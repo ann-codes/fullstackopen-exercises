@@ -5,7 +5,7 @@ import Part from "./Part";
 const Content = (props) => {
 
   // part 1.4
-  const mappedParts = props.parts.map(part => <Part part={part} />)
+  const mappedParts = props.parts.map((part, i) => <Part key={i} part={part} />)
 
   return (
     <Fragment>
