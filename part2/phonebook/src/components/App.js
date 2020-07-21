@@ -11,10 +11,14 @@ const App = () => {
   const [persons, setPersons] = useState(defaultPersons);
   const [newName, setNewName] = useState({ name: "", number: "" });
   const [isDupe, setIsDupe] = useState(false);
+  const [filter, setFilter] = useState("");
+
+  const handleNameFilter = (e) => {
+    setFilter(e.target.value);
+  };
 
   const handleNameChange = (e) => {
     setIsDupe(false);
-    console.log(newName);
     setNewName({ ...newName, [e.target.name]: e.target.value });
   };
 
@@ -33,7 +37,9 @@ const App = () => {
     }
   };
 
-  const mapPhonebook = persons.map((person, i) => (
+  const filteredBook = persons.filter((person) => person.name.includes(filter));
+
+  const mapPhonebook = filteredBook.map((person, i) => (
     <li key={i}>
       {person.name}: {person.number}
     </li>
@@ -41,7 +47,12 @@ const App = () => {
 
   return (
     <div>
-      <h2>PhoneBook</h2>
+      <h1>PhoneBook</h1>
+      <p>
+        filter shown with:{" "}
+        <input name="filterName" value={filter} onChange={handleNameFilter} />
+      </p>
+      <h2>Add New</h2>
       <form onSubmit={submitName}>
         <div>
           <p>
