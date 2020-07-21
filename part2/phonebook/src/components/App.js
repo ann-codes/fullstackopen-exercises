@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import axios from "axios";
 
 const App = () => {
-  const defaultPersons = [
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ];
-
-  const [persons, setPersons] = useState(defaultPersons);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState({ name: "", number: "" });
   const [isDupe, setIsDupe] = useState(false);
   const [filter, setFilter] = useState("");
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then((response) => setPersons(response.data));
+  };
+
+  useEffect(fetchData, []);
 
   const handleNameFilter = (e) => {
     setFilter(e.target.value);
