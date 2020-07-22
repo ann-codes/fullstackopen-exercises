@@ -4,21 +4,23 @@ This is a repo of my exercise solutions following the University of Helsinki [Fu
 
 Note: Some folders will require deleting the yarn.lock file in order to install node_modules and run server. (later added to .gitignore)
 
+Uses [Pure CSS](https://purecss.io/), a super lightweight css framework for fun.
+
 ## Course Contents
 
-- Part 0 Fundamentals of Web apps
+- [Part 0 Fundamentals of Web apps](/part0/)
   - a General Info
   - b Fundamentals of Web Apps
-- Part 1 Introduction to React
+- [Part 1 Introduction to React](/part1/)
   - a Introduction to React
   - b JavaScript
   - c Component state, event handlers
   - d A more complex state, debugging React apps
-- Part 2 Communicating with server
+- [Part 2 Communicating with server](/part2/)
   - a Rendering a collection, modules
   - b Forms
   - c Getting data from server
-    - NTS uses .env to hold API keys
+    - NTS uses .env to hold API keys; set up index.html w/ Pure css (see [countries_data](/part2/countries_data/))
   - d Altering data in server
   - e Adding styles to React app
 - Part 3 Programming a server with NodeJS and Express

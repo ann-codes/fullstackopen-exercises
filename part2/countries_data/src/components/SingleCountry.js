@@ -18,7 +18,7 @@ const SingleCountry = ({ country }) => {
   useEffect(fetchCountries, []);
 
   const showWeather = () => {
-    // check for null due to api call delay; undefined object will break JS
+    // check for undefined due to api call delay; calling undefined object will break app
     if (weather) {
       return (
         <Fragment>
