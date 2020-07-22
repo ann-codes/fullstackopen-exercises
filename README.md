@@ -18,6 +18,7 @@ Note: Some folders will require deleting the yarn.lock file in order to install 
   - a Rendering a collection, modules
   - b Forms
   - c Getting data from server
+    - NTS uses .env to hold API keys
   - d Altering data in server
   - e Adding styles to React app
 - Part 3 Programming a server with NodeJS and Express

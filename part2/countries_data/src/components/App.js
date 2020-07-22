@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SingleCountry from "./SingleCountry"
+import SingleCountry from "./SingleCountry";
 
 import axios from "axios";
 
@@ -15,34 +15,28 @@ const App = () => {
 
   useEffect(fetchCountries, []);
 
-  console.log(countries);
-
   const handleFilter = (e) => {
     setFilter(e.target.value);
   };
 
+  const showClick = e => {
+    setFilter(e.target.name)
+  }
+
   const filterCountries = countries.filter((country) =>
     country.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  console.log("includes", filterCountries);
-
-  const mapCountries = filterCountries.map((country) => (
-    <li>{country.name}</li>
-  ));
-
-  const tooManyText = (
-    <li>Too many countries found, please be more specific.</li>
   );
 
   const countryDisplay = () => {
     if (filterCountries.length > 10) {
       return <li>Too many countries found, please be more specific.</li>;
     } else if (filterCountries.length === 1) {
-      return <SingleCountry country={filterCountries[0]}/>
+      return <SingleCountry country={filterCountries[0]} />;
     } else {
       return filterCountries.map((country) => (
-        <li key={country.alpha3Code}>{country.name}</li>
+        <li key={country.alpha3Code}>
+          {country.name} <button name={country.name} onClick={showClick}>Show</button>
+        </li>
       ));
     }
   };
