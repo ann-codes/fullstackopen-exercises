@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import axiosSvs from "./services/axiosService";
 
 import InputField from "./InputField";
-import NameDupeCheck from "./NameDupeCheck";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState({ name: "", number: "" });
-  const [isDupe, setIsDupe] = useState(false);
+
   const [filter, setFilter] = useState("");
 
   const fetchData = () => {
@@ -21,7 +20,6 @@ const App = () => {
   };
 
   const handleNameChange = (e) => {
-    setIsDupe(false);
     setNewName({ ...newName, [e.target.name]: e.target.value });
   };
 
@@ -33,9 +31,23 @@ const App = () => {
     );
 
     if (findName) {
-      setIsDupe(true);
+      const confirmEdit = window.confirm(
+        `${findName.name} is already in the Phonebook. Do you want to replace their number?`
+      );
+
+      if (confirmEdit) {
+        axiosSvs
+          .update(findName.id, newName)
+          .then((response) => {
+            const filterEdited = persons.filter(
+              (person) => person.id !== findName.id
+            );
+            setPersons([...filterEdited, response.data]);
+            setNewName({ name: "", number: "" });
+          })
+          .catch((error) => console.log(`ERROR ====> ${error}`));
+      }
     } else {
-      console.log("ID", persons[persons.length - 1].id + 1);
       axiosSvs
         .create({ ...newName, id: persons[persons.length - 1].id + 1 })
         .then((response) => {
@@ -64,14 +76,20 @@ const App = () => {
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const mapPhonebook = filteredBook.map((person) => (
-    <li key={person.id}>
-      {person.name}: {person.number}{" "}
-      <button data-id={person.id} data-name={person.name} onClick={deleteData}>
-        Delete
-      </button>
-    </li>
-  ));
+  const mapPhonebook = filteredBook
+    .sort((a, b) => a.id - b.id)
+    .map((person) => (
+      <li key={person.id}>
+        {person.name}: {person.number}{" "}
+        <button
+          data-id={person.id}
+          data-name={person.name}
+          onClick={deleteData}
+        >
+          Delete
+        </button>
+      </li>
+    ));
 
   return (
     <div>
@@ -85,7 +103,6 @@ const App = () => {
       <h2>Add New</h2>
       <form onSubmit={submitData}>
         <div>
-          <NameDupeCheck isDupe={isDupe} nameToCheck={newName.name} />
           <InputField
             title="name"
             inputName="name"
