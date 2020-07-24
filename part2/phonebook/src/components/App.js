@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axiosSvs from "./services/axiosService";
 
-import axios from "axios";
+import InputField from "./InputField";
+import NameDupeCheck from "./NameDupeCheck";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -47,54 +48,65 @@ const App = () => {
     }
   };
 
+  const deleteData = (e) => {
+    const id = Number(e.target.getAttribute("data-id"));
+    const filteredDeleted = persons.filter((person) => person.id !== id);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${e.target.getAttribute("data-name")}?`
+    );
+    if (confirmDelete) {
+      axiosSvs.deleteItem(id);
+      setPersons(filteredDeleted);
+    }
+  };
+
   const filteredBook = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const mapPhonebook = filteredBook.map((person, i) => (
-    <li key={i}>
-      {person.name}: {person.number}
+  const mapPhonebook = filteredBook.map((person) => (
+    <li key={person.id}>
+      {person.name}: {person.number}{" "}
+      <button data-id={person.id} data-name={person.name} onClick={deleteData}>
+        Delete
+      </button>
     </li>
   ));
 
   return (
     <div>
       <h1>PhoneBook</h1>
-      <p>
-        filter shown with:{" "}
-        <input name="filterName" value={filter} onChange={handleNameFilter} />
-      </p>
+      <InputField
+        title="filter shown with"
+        inputName="filterName"
+        inputValue={filter}
+        handleChange={handleNameFilter}
+      />
       <h2>Add New</h2>
       <form onSubmit={submitData}>
         <div>
-          <p>
-            {isDupe
-              ? `${newName.name} is a Duplicate! Try again!`
-              : "Add a Name and Number:"}
-          </p>
-          <p>
-            name:{" "}
-            <input
-              name="name"
-              value={newName.name}
-              onChange={handleNameChange}
-            />
-          </p>
-          <p>
-            number:{" "}
-            <input
-              name="number"
-              value={newName.number}
-              onChange={handleNameChange}
-            />
-          </p>
+          <NameDupeCheck isDupe={isDupe} nameToCheck={newName.name} />
+          <InputField
+            title="name"
+            inputName="name"
+            inputValue={newName.name}
+            handleChange={handleNameChange}
+          />
+          <InputField
+            title="number"
+            inputName="number"
+            inputValue={newName.number}
+            handleChange={handleNameChange}
+          />
         </div>
         <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      <ul>{mapPhonebook}</ul>
+      <ul>
+        {persons.length > 0 ? mapPhonebook : "No entries in the phonebook!"}
+      </ul>
     </div>
   );
 };

@@ -1,3 +1,6 @@
+// see for full repo of examples
+// https://github.com/fullstack-hy2020/part2-notes/tree/part2-6
+
 import React, { useState, Fragment } from "react";
 import Note from "./Note";
 
