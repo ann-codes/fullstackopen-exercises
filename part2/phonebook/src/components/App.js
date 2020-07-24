@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
+import axiosSvs from "./services/axiosService";
 
-import axios from "axios";
+import InputField from "./InputField";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState({ name: "", number: "" });
-  const [isDupe, setIsDupe] = useState(false);
+
   const [filter, setFilter] = useState("");
 
   const fetchData = () => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    axiosSvs.getAll().then((response) => setPersons(response.data));
   };
 
   useEffect(fetchData, []);
@@ -21,11 +20,10 @@ const App = () => {
   };
 
   const handleNameChange = (e) => {
-    setIsDupe(false);
     setNewName({ ...newName, [e.target.name]: e.target.value });
   };
 
-  const submitName = (e) => {
+  const submitData = (e) => {
     e.preventDefault();
 
     const findName = persons.find(
@@ -33,59 +31,99 @@ const App = () => {
     );
 
     if (findName) {
-      setIsDupe(true);
+      const confirmEdit = window.confirm(
+        `${findName.name} is already in the Phonebook. Do you want to replace their number?`
+      );
+
+      if (confirmEdit) {
+        axiosSvs
+          .update(findName.id, newName)
+          .then((response) => {
+            const filterEdited = persons.filter(
+              (person) => person.id !== findName.id
+            );
+            setPersons([...filterEdited, response.data]);
+            setNewName({ name: "", number: "" });
+          })
+          .catch((error) => console.log(`ERROR ====> ${error}`));
+      }
     } else {
-      setPersons([...persons, newName]);
-      setNewName({ name: "", number: "" });
+      axiosSvs
+        .create({ ...newName, id: persons[persons.length - 1].id + 1 })
+        .then((response) => {
+          setPersons([...persons, response.data]);
+          setNewName({ name: "", number: "" });
+        })
+        .catch((error) => {
+          console.log("Error at ", error);
+        });
     }
   };
 
-  const filteredBook = persons.filter((person) => person.name.includes(filter));
+  const deleteData = (e) => {
+    const id = Number(e.target.getAttribute("data-id"));
+    const filteredDeleted = persons.filter((person) => person.id !== id);
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${e.target.getAttribute("data-name")}?`
+    );
+    if (confirmDelete) {
+      axiosSvs.deleteItem(id);
+      setPersons(filteredDeleted);
+    }
+  };
 
-  const mapPhonebook = filteredBook.map((person, i) => (
-    <li key={i}>
-      {person.name}: {person.number}
-    </li>
-  ));
+  const filteredBook = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  const mapPhonebook = filteredBook
+    .sort((a, b) => a.id - b.id)
+    .map((person) => (
+      <li key={person.id}>
+        {person.name}: {person.number}{" "}
+        <button
+          data-id={person.id}
+          data-name={person.name}
+          onClick={deleteData}
+        >
+          Delete
+        </button>
+      </li>
+    ));
 
   return (
     <div>
       <h1>PhoneBook</h1>
-      <p>
-        filter shown with:{" "}
-        <input name="filterName" value={filter} onChange={handleNameFilter} />
-      </p>
+      <InputField
+        title="filter shown with"
+        inputName="filterName"
+        inputValue={filter}
+        handleChange={handleNameFilter}
+      />
       <h2>Add New</h2>
-      <form onSubmit={submitName}>
+      <form onSubmit={submitData}>
         <div>
-          <p>
-            {isDupe
-              ? `${newName.name} is a Duplicate! Try again!`
-              : "Add a Name and Number:"}
-          </p>
-          <p>
-            name:{" "}
-            <input
-              name="name"
-              value={newName.name}
-              onChange={handleNameChange}
-            />
-          </p>
-          <p>
-            number:{" "}
-            <input
-              name="number"
-              value={newName.number}
-              onChange={handleNameChange}
-            />
-          </p>
+          <InputField
+            title="name"
+            inputName="name"
+            inputValue={newName.name}
+            handleChange={handleNameChange}
+          />
+          <InputField
+            title="number"
+            inputName="number"
+            inputValue={newName.number}
+            handleChange={handleNameChange}
+          />
         </div>
         <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      <ul>{mapPhonebook}</ul>
+      <ul>
+        {persons.length > 0 ? mapPhonebook : "No entries in the phonebook!"}
+      </ul>
     </div>
   );
 };
