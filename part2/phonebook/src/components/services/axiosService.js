@@ -1,6 +1,7 @@
 import axios from "axios";
 const baseUrl = "http://localhost:3001/persons";
 
+// I prefer keeping the ability to use response as is
 const getAll = () => {
   return axios.get(baseUrl);
 };
