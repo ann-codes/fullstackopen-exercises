@@ -34,13 +34,22 @@ const App = () => {
     if (findName) {
       setIsDupe(true);
     } else {
-      axiosSvs.create({ ...newName, id: persons.length + 1 });
-      setPersons([...persons, newName]);
-      setNewName({ name: "", number: "" });
+      console.log("ID", persons[persons.length - 1].id + 1);
+      axiosSvs
+        .create({ ...newName, id: persons[persons.length - 1].id + 1 })
+        .then((response) => {
+          setPersons([...persons, response.data]);
+          setNewName({ name: "", number: "" });
+        })
+        .catch((error) => {
+          console.log("Error at ", error);
+        });
     }
   };
 
-  const filteredBook = persons.filter((person) => person.name.includes(filter));
+  const filteredBook = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
   const mapPhonebook = filteredBook.map((person, i) => (
     <li key={i}>
