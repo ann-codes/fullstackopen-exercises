@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axiosSvs from "./services/axiosService";
 
 import InputField from "./InputField";
+import MessageBlock from "./MessageBlock";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState({ name: "", number: "" });
-
   const [filter, setFilter] = useState("");
+  const [messageType, setMessageType] = useState("");
+  const [messageName, setMessageName] = useState("");
 
   const fetchData = () => {
     axiosSvs.getAll().then((response) => setPersons(response.data));
@@ -35,6 +37,7 @@ const App = () => {
         `${findName.name} is already in the Phonebook. Do you want to replace their number?`
       );
 
+      // editing entry
       if (confirmEdit) {
         axiosSvs
           .update(findName.id, newName)
@@ -42,15 +45,20 @@ const App = () => {
             const filterEdited = persons.filter(
               (person) => person.id !== findName.id
             );
+            setMessageName(response.data.name);
+            setMessageType("edited");
             setPersons([...filterEdited, response.data]);
             setNewName({ name: "", number: "" });
           })
           .catch((error) => console.log(`ERROR ====> ${error}`));
       }
     } else {
+      // creating new entry
       axiosSvs
         .create({ ...newName, id: persons[persons.length - 1].id + 1 })
         .then((response) => {
+          setMessageName(response.data.name);
+          setMessageType("added");
           setPersons([...persons, response.data]);
           setNewName({ name: "", number: "" });
         })
@@ -67,7 +75,18 @@ const App = () => {
       `Are you sure you want to delete ${e.target.getAttribute("data-name")}?`
     );
     if (confirmDelete) {
-      axiosSvs.deleteItem(id);
+      // deleting entry
+      setMessageName(persons.find((person) => person.id === id).name);
+      setMessageType("deleted");
+      axiosSvs
+        .deleteItem(id)
+        .then((response) => {
+          console.log("Delete", response.data);
+        })
+        .catch((error) => {
+          console.log("Deletion Error ===> ", error);
+        });
+
       setPersons(filteredDeleted);
     }
   };
@@ -94,6 +113,13 @@ const App = () => {
   return (
     <div>
       <h1>PhoneBook</h1>
+
+      <MessageBlock
+        name={messageName}
+        setMessageType={setMessageType}
+        messageType={messageType}
+      />
+
       <InputField
         title="filter shown with"
         inputName="filterName"
