@@ -21,6 +21,11 @@ const MessageBlock = (props) => {
       <div className="warning fade-out">{props.name} was deleted from the Phonebook</div>
     );
     setTimeout(() => props.setMessageType(""), 5000);
+  }else if (messageType === "editError") {
+    message = (
+      <div className="warning fade-out">{props.name} is no longer in the Phonebook</div>
+    );
+    setTimeout(() => props.setMessageType(""), 5000);
   }
 
   return <Fragment>{message}</Fragment>;

@@ -50,7 +50,11 @@ const App = () => {
             setPersons([...filterEdited, response.data]);
             setNewName({ name: "", number: "" });
           })
-          .catch((error) => console.log(`ERROR ====> ${error}`));
+          .catch((error) => {
+            setMessageType("editError");
+            setMessageName(newName.name);
+            console.log(`ERROR ====> ${error}`);
+          });
       }
     } else {
       // creating new entry
@@ -81,7 +85,7 @@ const App = () => {
       axiosSvs
         .deleteItem(id)
         .then((response) => {
-          console.log("Delete", response.data);
+          console.log("Confirm deleted ===>", response.data);
         })
         .catch((error) => {
           console.log("Deletion Error ===> ", error);
