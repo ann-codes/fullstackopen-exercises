@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axiosSvs from "./services/axiosService";
 
 import axios from "axios";
 
@@ -9,9 +10,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   const fetchData = () => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    axiosSvs.getAll().then((response) => setPersons(response.data));
   };
 
   useEffect(fetchData, []);
@@ -25,7 +24,7 @@ const App = () => {
     setNewName({ ...newName, [e.target.name]: e.target.value });
   };
 
-  const submitName = (e) => {
+  const submitData = (e) => {
     e.preventDefault();
 
     const findName = persons.find(
@@ -35,6 +34,7 @@ const App = () => {
     if (findName) {
       setIsDupe(true);
     } else {
+      axiosSvs.create({ ...newName, id: persons.length + 1 });
       setPersons([...persons, newName]);
       setNewName({ name: "", number: "" });
     }
@@ -56,7 +56,7 @@ const App = () => {
         <input name="filterName" value={filter} onChange={handleNameFilter} />
       </p>
       <h2>Add New</h2>
-      <form onSubmit={submitName}>
+      <form onSubmit={submitData}>
         <div>
           <p>
             {isDupe
