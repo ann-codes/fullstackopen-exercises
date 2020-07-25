@@ -1,7 +1,30 @@
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 
 app.use(express.json());
+
+// part 3.8 (including both versions)
+morgan.token("content-post", (req) => JSON.stringify(req.body));
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :content-post"
+  )
+);
+app.use(
+  morgan((tokens, req, res) => {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, "content-length"),
+      "-",
+      tokens["response-time"](req, res),
+      "ms",
+      tokens["content-post"](req, res),
+    ].join(" ");
+  })
+);
 
 let persons = [
   {
@@ -93,9 +116,8 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
     id: generateId(),
   };
-
+  // reset persons obj
   persons = persons.concat(person);
-
   response.json(person);
 });
 
