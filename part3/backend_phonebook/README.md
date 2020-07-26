@@ -1,0 +1,1 @@
+The deployable version can be found in a [standalone repo](https://github.com/ann-codes/backend_phonebook).
