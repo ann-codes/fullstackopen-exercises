@@ -23,7 +23,7 @@ Uses [Pure CSS](https://purecss.io/), a super lightweight css framework for fun.
     - NTS uses .env to hold API keys; set up index.html w/ Pure css (see [countries_data](/part2/countries_data/))
   - d Altering data in server
   - e Adding styles to React app
-- Part 3 Programming a server with NodeJS and Express
+- [Part 3 Programming a server with NodeJS and Express](/part3/)
   - a Node.js and Express
   - b Deploying app to internet
   - c Saving data to MongoDB
