@@ -26,6 +26,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
 - [Part 3 Programming a server with NodeJS and Express](/part3/)
   - a Node.js and Express
   - b Deploying app to internet
+    - deployable version can be found in a [standalone repo](https://github.com/ann-codes/backend_phonebook)
   - c Saving data to MongoDB
   - d Validation and ESLint
 - Part 4 Testing Express servers, user administration
