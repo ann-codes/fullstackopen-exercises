@@ -1,11 +1,54 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const mongoose = require('mongoose')
 const cors = require('cors')
 
 app.use(cors())
 app.use(express.json());
 app.use(express.static('build'))
+
+// ======================================================== testing db connection
+if (process.argv.length < 3) { // test
+  console.log('Please provide the password as an argument: node mongo.js <password>')
+  process.exit(1)
+}
+
+const password = process.argv[2] // test
+const mongoPw = process.env.REACT_APP_MONGO_PW
+const url = `mongodb+srv://annfso:${password}@qluster4.bzuvg.mongodb.net/phonebook?retryWrites=true&w=majority`
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  date: Date,
+  important: Boolean,
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
+// const note = new Note({
+//   content: 'HTML is Easy',
+//   date: new Date(),
+//   important: true,
+// })
+
+// note.save().then(result => {
+//   console.log('note saved!')
+//   mongoose.connection.close()
+// })
+
+Note.find({}).then(result => {
+  result.forEach(note => {
+    console.log(note)
+  })
+  mongoose.connection.close()
+})
+// ========================================================
+
+
 
 // part 3.8 (including both versions)
 morgan.token("content-post", (req) => JSON.stringify(req.body));

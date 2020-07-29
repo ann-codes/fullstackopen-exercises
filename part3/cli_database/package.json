@@ -1,0 +1,13 @@
+{
+  "name": "cli_database",
+  "version": "1.0.0",
+  "description": "A command line database",
+  "main": "mongo.js",
+  "author": "Ann Nguyen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.8.9",
+    "morgan": "^1.10.0"
+  }
+}
