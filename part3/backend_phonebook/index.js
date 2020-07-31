@@ -95,7 +95,7 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-// Delete
+// DELETE
 app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then((result) => {
@@ -122,22 +122,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-app.put("/api/notes/:id", (request, response, next) => {
-  const body = request.body;
-
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
-
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
-    .then((updatedNote) => {
-      response.json(updatedNote);
-    })
-    .catch((error) => next(error));
-});
-
-// // this causes issues, keeping it commented out
+// // this causes issues, keeping it commented it out
 // const unknownEndpoint = (request, response) => {
 //   response.status(404).send({ error: "unknown endpoint" });
 // };
