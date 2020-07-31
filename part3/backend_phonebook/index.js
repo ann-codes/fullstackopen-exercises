@@ -3,12 +3,12 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const Person = require("./models/person");
 
+// MIDDLEWARE
 app.use(cors());
-app.use(express.json());
 app.use(express.static("build"));
+app.use(express.json());
 
 morgan.token("content-post", (req) => JSON.stringify(req.body));
 app.use(
@@ -17,62 +17,7 @@ app.use(
   )
 );
 
-// app.get("/", (req, res) => {
-//   res.send("<h1>Nothing to see here!</h1>");
-// });
-
-app.get("/api/persons", (req, res) => {
-  Person.find({}).then((persons) => {
-    res.json(persons);
-  });
-});
-
-app.get("/info", (req, res) => {
-  const now = new Date();
-  Person.find({}).then((persons) => {
-    res.send(
-      `<p>Phonebook has info for ${
-        persons.length
-      } people.</p><p>${now.toString()}</p>`
-    );
-  });
-});
-
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-
-  Person.find({}).then((persons) => {
-    const person = persons.find((person) => person.id === id);
-    if (person) {
-      response.json(person);
-    } else {
-      response.status(404).end();
-    }
-  });
-});
-
-app.delete("/api/persons/:id", (request, response, next) => {
-  const id = Number(request.params.id);
-  // reset updated data here, would be a setter in react
-  // persons = persons.filter((person) => person.id !== id);
-  // response.status(204).end();
-
-  Person.findByIdAndDelete(request.params.id)
-    .then((result) => {
-      console.log("Successful deletion");
-      response.status(204).end();
-    })
-    .catch((err) => {
-      next(err)
-      console.log("Error: ", err);
-    });
-});
-
-// Helper function
-const generateId = () => {
-  return Math.floor(Math.random() * Math.floor(1000001));
-};
-
+// CREATE
 app.post("/api/persons", (request, response) => {
   const body = request.body;
   let nameExists;
@@ -98,13 +43,105 @@ app.post("/api/persons", (request, response) => {
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
   });
 
   person.save().then((savedPerson) => {
     response.json(savedPerson);
   });
 });
+
+// ERROR HANDLING
+const errorHandler = (error, request, response, next) => {
+  console.error("ERROR =>", error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+app.use(errorHandler);
+
+// GETTING DATA
+app.get("/api/persons", (req, res) => {
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
+});
+
+app.get("/info", (req, res) => {
+  const now = new Date();
+  Person.find({}).then((persons) => {
+    res.send(
+      `<p>Phonebook has info for ${
+        persons.length
+      } people.</p><p>${now.toString()}</p>`
+    );
+  });
+});
+
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        console.log("\nPerson does not exist");
+        response.status(404).end();
+      }
+    })
+    // .catch((error) => {
+    //   console.log("\nError fetching person ===> ", error);
+    //   response.status(400).send({ error: "malformatted id" });
+    // });
+    .catch((error) => next(error));
+});
+
+// Delete
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      console.log("Successful deletion");
+      response.status(204).end();
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// UPDATE
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((newPerson) => {
+      res.json(newPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.put("/api/notes/:id", (request, response, next) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch((error) => next(error));
+});
+
+// // this causes issues, keeping it commented out
+// const unknownEndpoint = (request, response) => {
+//   response.status(404).send({ error: "unknown endpoint" });
+// };
+// app.use(unknownEndpoint);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

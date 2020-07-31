@@ -73,7 +73,7 @@ const App = () => {
   };
 
   const deleteData = (e) => {
-    const id = Number(e.target.getAttribute("data-id"));
+    const id = e.target.getAttribute("data-id");
     const filteredDeleted = persons.filter((person) => person.id !== id);
     const confirmDelete = window.confirm(
       `Are you sure you want to delete ${e.target.getAttribute("data-name")}?`
@@ -85,7 +85,7 @@ const App = () => {
       axiosSvs
         .deleteItem(id)
         .then((response) => {
-          console.log("Confirm deleted ===>", response.data);
+          console.log("Confirm deleted ===>", response);
         })
         .catch((error) => {
           console.log("Deletion Error ===> ", error);

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const url = process.env.MONGODB_URI;
 
+mongoose.set('useFindAndModify', false)
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => {
@@ -14,16 +15,16 @@ mongoose
 // SCHEMA
 const personSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  number: { type: String, required: true},
-  id: Number,
+  number: { type: String, required: true}
 });
 
 const Person = mongoose.model("Person", personSchema);
 
+// convert the mongo _id to id and
 // deleting the mongo _id and __v obj from displaying in api endpoint
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-      // returnedObject.id = returnedObject._id.toString()
+      returnedObject.id = returnedObject._id.toString()
       delete returnedObject._id
       delete returnedObject.__v
   }
@@ -33,23 +34,19 @@ personSchema.set('toJSON', {
 let persons = [
   {
     name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
+    number: "040-123456"
   },
   {
     name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2,
+    number: "39-44-5323523"
   },
   {
     name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
+    number: "12-43-234345"
   },
   {
     name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4,
+    number: "39-23-6423122"
   },
 ];
 
@@ -63,12 +60,14 @@ const seedPersonDB = (data) => {
     });
 
     addPerson.save().then((result) => {
-      console.log(`Added ${nameEntered} (${numberEntered}) to phonebook!`);
+      console.log(`Seeding ${person.name} (${person.number}) to phonebook!`);
       mongoose.connection.close();
+    }).catch(err => {
+      console.log("Error in data seed:", err.message);
     });
   });
 };
 
-// seedPersonDB(persons); // comment out when seeding completes
+seedPersonDB(persons); // comment out when seeding completes
 
 module.exports = mongoose.model("Person", personSchema);
