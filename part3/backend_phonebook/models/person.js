@@ -4,7 +4,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 const url = process.env.MONGODB_URI;
 
 mongoose.set("useFindAndModify", false);
-mongoose.set("runValidators", true);
+// mongoose.set("runValidators", true); // this breaks the put method
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
