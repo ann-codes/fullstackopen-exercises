@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axiosSvs from "../services/axiosService"
+import axiosSvs from "../services/axiosService";
 
 import InputField from "./InputField";
 import MessageBlock from "./MessageBlock";
@@ -67,7 +67,9 @@ const App = () => {
           setNewName({ name: "", number: "" });
         })
         .catch((error) => {
-          console.log("Error at ", error);
+          console.log("Validation Error ===> ", error.response.data.error);
+          setMessageName(error.response.data.error);
+          setMessageType("validationError");
         });
     }
   };

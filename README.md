@@ -28,6 +28,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - b Deploying app to internet
     - deployable version can be found in a [standalone repo](https://github.com/ann-codes/backend_phonebook)
   - c Saving data to MongoDB
+    - see https://fso-backend-phonebook.herokuapp.com/
   - d Validation and ESLint
 - Part 4 Testing Express servers, user administration
   - a Structure of backend application, introduction to testing
