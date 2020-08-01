@@ -8,7 +8,7 @@ mongoose.set("useFindAndModify", false);
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result) => {
+  .then(() => {
     console.log("connected to MongoDB");
   })
   .catch((error) => {
@@ -66,7 +66,7 @@ const seedPersonDB = (data) => {
 
     addPerson
       .save()
-      .then((result) => {
+      .then(() => {
         console.log(`Seeding ${person.name} (${person.number}) to phonebook!`);
         mongoose.connection.close();
       })

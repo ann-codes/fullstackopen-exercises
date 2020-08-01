@@ -31,7 +31,7 @@ const errorHandler = (error, req, res, next) => {
 app.use(errorHandler);
 
 // CREATE
-app.post("/api/persons", (req, res, next) => {
+app.post("/api/persons", (req, res) => {
   const body = req.body;
   let nameExists;
 
@@ -113,7 +113,7 @@ app.put("/api/persons/:id", (req, res, next) => {
 // DELETE
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then((result) => res.status(204).end())
+    .then(() => res.status(204).end())
     .catch((err) => next(err));
 });
 
