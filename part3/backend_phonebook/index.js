@@ -19,12 +19,13 @@ app.use(
 
 // ERROR HANDLING
 const errorHandler = (error, req, res, next) => {
-  console.error("ERROR =>", error.message);
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
-    return res.status(400).json({ error: "cannot validate: " + error.message });
   }
+  // // Does not seem to pass error object using next??????
+  // else if (error.name === "ValidationError") {
+  //   return res.status(400).send({ error: error.message });
+  // }
   next(error);
 };
 app.use(errorHandler);
@@ -60,7 +61,9 @@ app.post("/api/persons", (req, res, next) => {
   person
     .save()
     .then((savedPerson) => res.json(savedPerson.toJSON()))
-    .catch((err) => next(err));
+    .catch((error) => res.status(400).json({ error: error.message }));
+  // Error does not seem to pass error object when using next ????
+  // will use the old way of passing error in order to display the error message
 });
 
 // RETRIEVE
