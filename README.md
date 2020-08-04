@@ -30,6 +30,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - c Saving data to MongoDB
     - see https://fso-backend-phonebook.herokuapp.com/
   - d Validation and ESLint
+  - [Certificate of Completion (for 3 credits worth, lol)](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/262ba8424fe26655f03598d5d1ea851c)
 - Part 4 Testing Express servers, user administration
   - a Structure of backend application, introduction to testing
   - b Testing the backend
