@@ -1,4 +1,5 @@
 const listHelper = require("../utils/list_helper");
+const { mostBlogs } = require("../utils/list_helper");
 
 describe.skip("testing that testing works with a dummy", () => {
   test("dummy returns one", () => {
@@ -85,7 +86,7 @@ describe("total likes", () => {
     expect(result).toBe(36);
   });
 
-  test("when list has many blogs, find the one with the most likes", () => {
+  test("when list has many blogs, find the author with the most likes", () => {
     const result = listHelper.favoriteBlog(listWithManyBlogs);
     expect(result).toStrictEqual({
       _id: "5a422b3a1b54a676234d17f9",
@@ -94,6 +95,22 @@ describe("total likes", () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0,
+    });
+  });
+
+  test("when list has many blogs, find the author with the most blogs", () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs);
+    expect(result).toStrictEqual({
+      author: "Robert C. Martin",
+      blogs: 3,
+    });
+  });
+
+  test("when list has many blogs, find the author with the most total likes", () => {
+    const result = listHelper.mostLikes(listWithManyBlogs);
+    expect(result).toStrictEqual({
+      author: "Edsger W. Dijkstra",
+      likes: 17,
     });
   });
 });
