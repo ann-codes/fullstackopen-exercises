@@ -31,9 +31,40 @@ blogRouter.post("/", async (req, res) => {
   try {
     const savedBlog = await blog.save();
     res.json(savedBlog);
+    res.status(201).end();
+    console.log("ENTRY SAVED");
   } catch (ex) {
     res.status(400).end();
-    console.log("ERROR BAD REQUEST ===>", ex);
+    console.log("400 ERROR BAD REQUEST");
+  }
+});
+
+blogRouter.delete("/:id", async (req, res) => {
+  try {
+    await Blog.findByIdAndRemove(req.params.id);
+    res.status(204).end();
+    console.log("ENTRY DELETED");
+  } catch (ex) {
+    res.status(400).end();
+    console.log("400 ERROR DELETING, BAD REQUEST");
+  }
+});
+
+blogRouter.put("/:id", async (req, res) => {
+  const blog = {
+    title: req.body.title,
+    author: req.body.author,
+    url: req.body.url,
+    likes: req.body.likes,
+  };
+  try {
+    await Blog.findByIdAndUpdate(req.params.id, blog, { new: true });
+    res.json(blog);
+    res.status(200).end();
+    console.log("ENTRY UPDATED");
+  } catch (ex) {
+    res.status(400).end();
+    console.log("400 ERROR UPDATING, BAD REQUEST");
   }
 });
 
