@@ -114,6 +114,8 @@ const App = () => {
       </li>
     ));
 
+  // 2.10 I opted to extract the components differently from the suggested
+  // as I wanted to create a generic Input Component for reuse
   return (
     <div>
       <h1>PhoneBook</h1>
