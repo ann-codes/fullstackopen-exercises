@@ -27,6 +27,7 @@ beforeEach(async () => {
   const blogsObj = helper.initBlogs.map((blog) => new Blog(blog));
   const blogsArr = blogsObj.map((blog) => blog.save());
   await Promise.all(blogsArr);
+  // ^ still occassionally may fail test of first entry being wrong
 });
 
 describe("verifying initialization of tests", () => {

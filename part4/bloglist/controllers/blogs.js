@@ -1,5 +1,6 @@
 const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 // blogRouter.get("/", (request, response) => {
 //   Blog.find({}).then((blogs) => {
@@ -9,7 +10,7 @@ const Blog = require("../models/blog");
 
 // changing to async/await
 blogRouter.get("/", async (req, res) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   res.json(blogs);
 });
 
@@ -22,14 +23,25 @@ blogRouter.get("/", async (req, res) => {
 
 // changing to async/await
 blogRouter.post("/", async (req, res) => {
+  const user = await User.findById(req.body.userId);
+  // { // submit obj like below
+  //   "likes": 2,
+  //   "title": "Some Title",
+  //   "author": "Ann",
+  //   "url": "ann.com",
+  //   "userId": "5f2e2a7e3fabbe0dbb386909"
+  // }
   const blog = new Blog({
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes,
+    user: user._id,
   });
   try {
     const savedBlog = await blog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
     res.json(savedBlog);
     res.status(201).end();
     console.log("ENTRY SAVED");
