@@ -1,4 +1,11 @@
+const bcrypt = require("bcrypt");
 const Blog = require("../models/blog");
+const User = require("../models/user");
+
+const hashPass = async (pw) => {
+  const passwordHash = await bcrypt.hash(pw, 10);
+  return passwordHash;
+};
 
 const initBlogs = [
   {
@@ -32,7 +39,6 @@ const addBlog3 = {
   author: "Failure",
   likes: 0,
 };
-
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
