@@ -23,6 +23,7 @@ usersRouter.post("/", async (req, res) => {
     res.status(201).end();
     console.log("USER CREATED");
   } catch (ex) {
+    console.log("EXCEPTIOÑ=======", ex);
     res.status(400).json({
       error:
         "username and password required; password must be longer than 3 characters",

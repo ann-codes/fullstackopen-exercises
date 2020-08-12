@@ -6,8 +6,8 @@ const api = supertest(app);
 
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const blogRouter = require("../controllers/blogs");
-const userRouter = require("../controllers/users");
+// const blogRouter = require("../controllers/blogs");
+// const userRouter = require("../controllers/users");
 
 beforeEach(async () => {
   await User.deleteMany({});
@@ -29,7 +29,7 @@ beforeEach(async () => {
   // ^ still occassionally may fail test of first entry being wrong
 });
 
-describe("verifying initialization of tests", () => {
+describe.skip("verifying initialization of tests", () => {
   it("returns as json", async () => {
     await api
       .get("/api/blogs")
@@ -53,17 +53,14 @@ describe("verifying initialization of tests", () => {
   });
 });
 
-describe("verifying api calls", () => {
-  test.only("there are now 3 blogs", async () => {
+describe.skip("verifying api blog calls", () => {
+  test("there are now 3 blogs", async () => {
     let blogSave = new Blog(helper.addBlog1);
-    await api
-      .post("/api/blogs")
-      .send({ title: "Meow Blog", author: "Zues", url: "cats.com", likes: 44 });
-    // .expect(200);
+    await api.post("/api/blogs").send(blogSave).expect(200);
     // console.log(blogSave);
     const allBlogs = await helper.blogsInDb();
-    console.log("all blogs =======", allBlogs);
-    // expect(allBlogs).toHaveLength(helper.initBlogs.length + 1);
+    // console.log("all blogs =======", allBlogs);
+    expect(allBlogs).toHaveLength(helper.initBlogs.length + 1);
   });
 
   test("if likes is missing from the req, default to 0", async () => {
@@ -103,13 +100,17 @@ describe("verifying api calls", () => {
     await api.put(`/api/blogs/${toUpdate[0].id}`, changeObj).expect(200);
     // calling an blogsInDb in async more than once will not work for testing
   });
+});
 
+describe("verifying api user calls", () => {
   test("succeeds with 201 code", async () => {
     const allUsers = await helper.usersInDb();
     console.log("==== all users", allUsers);
     let userSave = new User(helper.addUser2);
-    await api.post("/api/users").send(userSave).expect(201);
-    expect(allUsers).toHaveLength(1);
+    console.log("userSave", userSave);
+    await api.post("/api/users").send(userSave)
+    .expect(201);
+    expect(allUsers).toHaveLength(2);
   });
 });
 
