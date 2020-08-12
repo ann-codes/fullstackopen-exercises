@@ -11,6 +11,13 @@ usersRouter.get("/", async (req, res) => {
 usersRouter.post("/", async (req, res) => {
   const body = req.body;
   const saltRounds = 10;
+
+  if (body.password.length < 3) {
+    res.status(400).json({
+      error: "password must be longer than 3 characters",
+    });
+  }
+
   const passwordHash = await bcrypt.hash(body.password, saltRounds);
   const user = new User({
     username: body.username,
@@ -23,10 +30,9 @@ usersRouter.post("/", async (req, res) => {
     res.status(201).end();
     console.log("USER CREATED");
   } catch (ex) {
-    console.log("EXCEPTIOÑ=======", ex);
+    // console.log("EXCEPTIOÑ=======", ex);
     res.status(400).json({
-      error:
-        "username and password required; password must be longer than 3 characters",
+      error: "username and password required",
     });
   }
 });

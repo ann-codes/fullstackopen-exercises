@@ -5,28 +5,13 @@ const app = require("../app");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
-const User = require("../models/user");
-// const blogRouter = require("../controllers/blogs");
-// const userRouter = require("../controllers/users");
 
-beforeEach(async () => {
-  await User.deleteMany({});
-  const userSave = new User(helper.addUser1);
-  await userSave.save();
-
-  // // can put into loop
-  // // tests fail occasionally due to async save issues
-  // helper.initBlogs.forEach(async (blog) => {
-  //   let blogSave = new Blog(blog);
-  //   await blogSave.save();
-  // });
-
-  // using Promise.all()
+beforeAll(async () => {
   await Blog.deleteMany({});
   const blogsObj = helper.initBlogs.map((blog) => new Blog(blog));
   const blogsArr = blogsObj.map((blog) => blog.save());
   await Promise.all(blogsArr);
-  // ^ still occassionally may fail test of first entry being wrong
+  // ^^ does not actually preserve the order from original array
 });
 
 describe.skip("verifying initialization of tests", () => {
@@ -47,12 +32,15 @@ describe.skip("verifying initialization of tests", () => {
     expect(response.body).toHaveLength(helper.initBlogs.length);
   });
 
-  test("the first blog's author is Ann", async () => {
+  test("an object contains 'coolBlog.com'", async () => {
     const response = await api.get("/api/blogs");
-    expect(response.body[0].author).toBe("Ann");
+    expect.arrayContaining([
+      expect.objectContaining("coolBlog.com")
+    ])
   });
 });
 
+// post no longer working? fix later
 describe.skip("verifying api blog calls", () => {
   test("there are now 3 blogs", async () => {
     let blogSave = new Blog(helper.addBlog1);
@@ -99,18 +87,6 @@ describe.skip("verifying api blog calls", () => {
     const changeObj = { ...toUpdate[0], likes: 1000000 };
     await api.put(`/api/blogs/${toUpdate[0].id}`, changeObj).expect(200);
     // calling an blogsInDb in async more than once will not work for testing
-  });
-});
-
-describe("verifying api user calls", () => {
-  test("succeeds with 201 code", async () => {
-    const allUsers = await helper.usersInDb();
-    console.log("==== all users", allUsers);
-    let userSave = new User(helper.addUser2);
-    console.log("userSave", userSave);
-    await api.post("/api/users").send(userSave)
-    .expect(201);
-    expect(allUsers).toHaveLength(2);
   });
 });
 
