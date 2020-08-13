@@ -14,7 +14,7 @@ beforeAll(async () => {
   // ^^ does not actually preserve the order from original array
 });
 
-describe.skip("verifying initialization of tests", () => {
+describe("verifying initialization of tests", () => {
   it("returns as json", async () => {
     await api
       .get("/api/blogs")
@@ -34,21 +34,19 @@ describe.skip("verifying initialization of tests", () => {
 
   test("an object contains 'coolBlog.com'", async () => {
     const response = await api.get("/api/blogs");
-    expect.arrayContaining([
-      expect.objectContaining("coolBlog.com")
-    ])
+    expect.arrayContaining([expect.objectContaining("coolBlog.com")]);
   });
 });
 
-// post no longer working? fix later
-describe.skip("verifying api blog calls", () => {
+describe("verifying api blog calls", () => {
+  // post will FAIL because of inclusion of token
+  // how to test w/ tokens?
   test("there are now 3 blogs", async () => {
-    let blogSave = new Blog(helper.addBlog1);
-    await api.post("/api/blogs").send(blogSave).expect(200);
-    // console.log(blogSave);
+    let newBlog = new Blog(helper.addBlog1);
+    await api.post("/api/blogs").send(newBlog).expect(200);
     const allBlogs = await helper.blogsInDb();
-    // console.log("all blogs =======", allBlogs);
-    expect(allBlogs).toHaveLength(helper.initBlogs.length + 1);
+    console.log("all blogs =======", allBlogs);
+    expect(allBlogs.length).toBe(helper.initBlogs.length + 1);
   });
 
   test("if likes is missing from the req, default to 0", async () => {
