@@ -1,11 +1,4 @@
-const bcrypt = require("bcrypt");
 const Blog = require("../models/blog");
-const User = require("../models/user");
-
-const hashPass = async (pw) => {
-  const passwordHash = await bcrypt.hash(pw, 10);
-  return passwordHash;
-};
 
 const initBlogs = [
   {
@@ -23,6 +16,8 @@ const initBlogs = [
 ];
 
 const addBlog1 = {
+  _id: "5a422a851b54a676234d17f7",
+  __v: 0,
   title: "Meow Blog",
   author: "Zues",
   url: "cats.com",
