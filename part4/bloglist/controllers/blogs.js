@@ -2,22 +2,20 @@ const blogRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const middleware = require("../utils/middleware");
 
 blogRouter.get("/", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
   res.json(blogs);
 });
 
-// helper function, from readings, gets the bearer+token
-// then returns the token string (w/o "bearer " word)
-const getTokenFrom = (req) => {
-  const auth = req.get("authorization");
-  return auth && auth.toLowerCase().startsWith("bearer ")
-    ? auth.substring(7)
-    : null;
-};
-
 blogRouter.post("/", async (req, res) => {
+  const token = req.token;
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    return res.status(401).json({ error: "token invalid or missing" });
+  }
+
   if (!req.body.title || !req.body.url) {
     return res.status(400).json({ error: "title or url missing" });
   }
@@ -28,12 +26,6 @@ blogRouter.post("/", async (req, res) => {
     url: req.body.url,
     likes: req.body.likes || 0,
   };
-
-  const token = getTokenFrom(req);
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-  if (!token || !decodedToken.id) {
-    return res.status(401).json({ error: "token invalid or missing" });
-  }
 
   // checks for ID if submitted
   const user = await User.findById(decodedToken.id);
@@ -60,13 +52,25 @@ blogRouter.post("/", async (req, res) => {
 });
 
 blogRouter.delete("/:id", async (req, res) => {
-  try {
-    await Blog.findByIdAndRemove(req.params.id);
-    res.status(204).end();
-    console.log("BLOG DELETED");
-  } catch (ex) {
-    res.status(400).end();
-    console.log("400 ERROR DELETING, BAD REQUEST");
+  const token = req.token;
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  if (!token || !decodedToken.id) {
+    return res.status(401).json({ error: "token invalid or missing" });
+  }
+
+  // checks for ID if submitted
+  const user = await User.findById(decodedToken.id);
+  if (user) {
+    try {
+      await Blog.findByIdAndRemove(req.params.id);
+      res.status(204).end();
+      console.log("BLOG DELETED");
+    } catch (ex) {
+      res.status(400).end();
+      console.log("400 ERROR DELETING, BAD REQUEST");
+    }
+  } else {
+    res.status(400).json({ error: "user id and token mismatch" });
   }
 });
 
