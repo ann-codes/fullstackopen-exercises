@@ -6,9 +6,9 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-// const getAllAA = async () => {
-//   const req = await axios.get(baseUrl);
-//   return req.data;
-// };
+const getAllAA = async () => {
+  const req = await axios.get(baseUrl);
+  return req.data;
+};
 
-export default { getAll };
+export default { getAll, getAllAA };
