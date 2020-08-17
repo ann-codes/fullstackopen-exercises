@@ -1,46 +1,34 @@
 import React, { useState, useEffect, Fragment } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
+import userService from "./services/users";
 import loginService from "./services/login";
+import ErrorMessage from "./components/ErrorMessage";
 
-import "./App.css"
+import "./App.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // // ============ their original way
-  // useEffect(() => {
-  //   blogService
-  //     .getAll()
-  //     .then((blogs) => setBlogs(blogs))
-  //     .catch((err) => console.log("Error", err));
-  // }, []);
-
-  // // ============ my old preferred way
-  // const getAllBlogs = () => {
-  //   blogService.getAll().then((blogs) => setBlogs(blogs));
-  // };
-  // useEffect(getAllBlogs, []);
-
-  // // ============ using async/await
-  // const getBlogs = async () => {
-  //   const blogs = await blogService.getAllAA();
-  //   setBlogs(blogs);
-  // };
-  // useEffect(() => {
-  //   getBlogs();
-  // }, []);
-
-  // // ============ using async/await w/ IIFE
   useEffect(() => {
     (async function fetchData() {
-      const blogs = await blogService.getAllAA();
+      const blogs = await blogService.getAll();
       setBlogs(blogs);
     })();
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("bloglist-token");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
   }, []);
 
   const handleLogin = async (e) => {
@@ -51,22 +39,45 @@ const App = () => {
         password,
       });
 
-      console.log("logging in with", username, password);
-
+      window.localStorage.setItem("bloglist-token", JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
       setUsername("");
       setPassword("");
-    } catch (exception) {
+    } catch (ex) {
       setErrorMessage("Wrong credentials");
+      console.log(ex.response.data.error); 
+      //// getting error message from json set in controller here ^^
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
     }
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("bloglist-token");
+    setUser(null);
+  };
+
+  const submitNewBlog = async (e) => {
+    e.preventDefault();
+    const payload = { ...newBlog };
+    try {
+      const userId = await userService.findIdByUsername(user.username);
+      payload.userId = userId.id;
+      blogService.create(payload);
+      setBlogs(blogs.concat({ ...payload, id: blogs.length + 1 }));
+      setNewBlog({ title: "", author: "", url: "" });
+    } catch (ex) {
+      console.log("ERROR", ex);
+    }
+  };
+
+  // =========== helper change to component later
   const loginForm = () => (
     <Fragment>
       <h2>Login</h2>
+      <ErrorMessage message={errorMessage} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -91,19 +102,65 @@ const App = () => {
     </Fragment>
   );
 
-  const mapBlogs = blogs
+  const createNewBlog = () => (
+    <div>
+      <h2>Add New Blog</h2>
+      <form onSubmit={submitNewBlog}>
+        <div>
+          Title:
+          <input
+            type="text"
+            value={newBlog.title}
+            name="title"
+            onChange={({ target }) =>
+              setNewBlog({ ...newBlog, title: target.value })
+            }
+          />
+        </div>
+        <div>
+          Author:
+          <input
+            type="text"
+            value={newBlog.author}
+            name="author"
+            onChange={({ target }) =>
+              setNewBlog({ ...newBlog, author: target.value })
+            }
+          />
+        </div>
+        <div>
+          Url:
+          <input
+            type="text"
+            value={newBlog.url}
+            name="url"
+            onChange={({ target }) =>
+              setNewBlog({ ...newBlog, url: target.value })
+            }
+          />
+        </div>
+        <button type="submit">Add blog</button>
+      </form>
+    </div>
+  );
+
+  // =========== helper change to component later, combine w/ return obj below
+  const blogsList = blogs
     ? blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
     : "loading...";
 
   return (
     <div>
-      {user === null ? (
+      {!user ? (
         loginForm()
       ) : (
         <Fragment>
-          <h2>Blogs</h2>
-          <p>{user.name} logged-in</p>
-          {mapBlogs}
+          <div>
+            {user.name} logged-in<button onClick={handleLogout}>Logout</button>
+          </div>
+          {createNewBlog()}
+          <h2>{user.name}'s Blogs</h2>
+          {blogsList}
         </Fragment>
       )}
     </div>
