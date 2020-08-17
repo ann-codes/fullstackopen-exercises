@@ -35,9 +35,9 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - a Structure of backend application, introduction to testing
   - b Testing the backend
   - c User administration
-  - d Token authentication
-- Part 5 Testing React apps
-  - a Login in frontend
+  - d Token authentication ([see notes on auth in postman](/part4/README.md))
+- [Part 5 Testing React apps](/part5/)
+  - a Login in frontend ([see notes on async/await](/part5/bloglist-frontend/README.md))
   - b props.children and proptypes
   - c Testing React apps
   - d End to end -testing
