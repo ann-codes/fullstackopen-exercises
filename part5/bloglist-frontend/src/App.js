@@ -3,9 +3,9 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import userService from "./services/users";
 import loginService from "./services/login";
-import ErrorMessage from "./components/ErrorMessage";
 
 import "./App.css";
+import MessageBlock from "./components/MessageBlock";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,7 +13,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [msgBlock, setMsgBlock] = useState({ css: "", msg: "" });
 
   useEffect(() => {
     (async function fetchData() {
@@ -45,12 +45,8 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (ex) {
-      setErrorMessage("Wrong credentials");
-      console.log(ex.response.data.error); 
-      //// getting error message from json set in controller here ^^
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+      // getting error message from json set in controller here ^^
     }
   };
 
@@ -65,11 +61,14 @@ const App = () => {
     try {
       const userId = await userService.findIdByUsername(user.username);
       payload.userId = userId.id;
-      blogService.create(payload);
-      setBlogs(blogs.concat({ ...payload, id: blogs.length + 1 }));
-      setNewBlog({ title: "", author: "", url: "" });
+      const created = await blogService.create(payload);
+      if (created) {
+        setBlogs(blogs.concat({ ...payload, id: blogs.length + 1 }));
+        setNewBlog({ title: "", author: "", url: "" });
+        setMsgBlock({ css: "success fade-out", msg: "new blog added!" });
+      }
     } catch (ex) {
-      console.log("ERROR", ex);
+      setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
     }
   };
 
@@ -77,7 +76,6 @@ const App = () => {
   const loginForm = () => (
     <Fragment>
       <h2>Login</h2>
-      <ErrorMessage message={errorMessage} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -151,6 +149,7 @@ const App = () => {
 
   return (
     <div>
+      <MessageBlock msgBlock={msgBlock} setter={setMsgBlock} />
       {!user ? (
         loginForm()
       ) : (
