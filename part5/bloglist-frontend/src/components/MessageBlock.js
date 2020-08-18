@@ -10,7 +10,7 @@ const MessageBlock = (props) => {
   //     </div>
   //   );
 
-  setTimeout(() => props.setter({ css: "", msg: "" }), 5000);
+  setTimeout(() => props.setter({ css: "", msg: "" }), 6000);
 
   return <Fragment>{message}</Fragment>;
 };
