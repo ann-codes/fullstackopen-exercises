@@ -1,11 +1,15 @@
 import React, { useState, useEffect, Fragment } from "react";
-import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import userService from "./services/users";
 import loginService from "./services/login";
 
-import "./App.css";
+import Blog from "./components/Blog";
 import MessageBlock from "./components/MessageBlock";
+import LoginForm from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
+
+import "./App.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -72,93 +76,45 @@ const App = () => {
     }
   };
 
-  // =========== helper change to component later
-  const loginForm = () => (
-    <Fragment>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </Fragment>
-  );
-
-  const createNewBlog = () => (
-    <div>
-      <h2>Add New Blog</h2>
-      <form onSubmit={submitNewBlog}>
-        <div>
-          Title:
-          <input
-            type="text"
-            value={newBlog.title}
-            name="title"
-            onChange={({ target }) =>
-              setNewBlog({ ...newBlog, title: target.value })
-            }
-          />
-        </div>
-        <div>
-          Author:
-          <input
-            type="text"
-            value={newBlog.author}
-            name="author"
-            onChange={({ target }) =>
-              setNewBlog({ ...newBlog, author: target.value })
-            }
-          />
-        </div>
-        <div>
-          Url:
-          <input
-            type="text"
-            value={newBlog.url}
-            name="url"
-            onChange={({ target }) =>
-              setNewBlog({ ...newBlog, url: target.value })
-            }
-          />
-        </div>
-        <button type="submit">Add blog</button>
-      </form>
-    </div>
-  );
+  const handleNewBlogChange = (e) => {
+    setNewBlog({ ...newBlog, [e.target.name]: e.target.value });
+  };
 
   // =========== helper change to component later, combine w/ return obj below
   const blogsList = blogs
-    ? blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+    ? blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => <Blog key={blog.id} blog={blog} />)
     : "loading...";
 
   return (
     <div>
       <MessageBlock msgBlock={msgBlock} setter={setMsgBlock} />
       {!user ? (
-        loginForm()
+        <LoginForm
+          handleSubmit={handleLogin}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          username={username}
+          password={password}
+        />
       ) : (
         <Fragment>
           <div>
             {user.name} logged-in<button onClick={handleLogout}>Logout</button>
           </div>
-          {createNewBlog()}
-          <h2>{user.name}'s Blogs</h2>
+
+          <Togglable
+            buttonLabelOff="Nevermind, No Blog!"
+            buttonLabelOn="Add New Blog?"
+          >
+            <BlogForm
+              submitNewBlog={submitNewBlog}
+              newBlog={newBlog}
+              handleChange={handleNewBlogChange}
+            />
+          </Togglable>
+          <h2>Blog Links</h2>
           {blogsList}
         </Fragment>
       )}
