@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useImperativeHandle } from "react";
 
-const Togglable = (props) => {
+// useRef hooks example not used due to structure of components
+const Togglable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
     setVisible(!visible);
   };
+
+  useImperativeHandle(ref, () => {
+    return {
+      toggleVisibility,
+    };
+  });
 
   return (
     <div>
@@ -13,9 +20,8 @@ const Togglable = (props) => {
         {visible ? props.buttonLabelOff : props.buttonLabelOn}
       </button>
       <div style={{ display: visible ? "" : "none" }}>{props.children}</div>
-      <button>Delete</button>
     </div>
   );
-};
+});
 
 export default Togglable;
