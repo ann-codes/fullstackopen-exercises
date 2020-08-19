@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
 import blogService from "./services/blogs";
-import userService from "./services/users";
 import loginService from "./services/login";
 
 import Blog from "./components/Blog";
@@ -13,7 +12,6 @@ import "./App.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -59,33 +57,14 @@ const App = () => {
     setUser(null);
   };
 
-  const submitNewBlog = async (e) => {
-    e.preventDefault();
-    const payload = { ...newBlog };
-    try {
-      const userId = await userService.findIdByUsername(user.username);
-      payload.userId = userId.id;
-      const created = await blogService.create(payload);
-      if (created) {
-        setBlogs(blogs.concat({ ...payload, id: blogs.length + 1 }));
-        setNewBlog({ title: "", author: "", url: "" });
-        setMsgBlock({ css: "success fade-out", msg: "new blog added!" });
-      }
-    } catch (ex) {
-      setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
-    }
-  };
-
-  const handleNewBlogChange = (e) => {
-    setNewBlog({ ...newBlog, [e.target.name]: e.target.value });
-  };
-
   // =========== helper change to component later, combine w/ return obj below
   const blogsList = blogs
     ? blogs
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => <Blog key={blog.id} blog={blog} />)
     : "loading...";
+
+  // console.log("BLOGS", blogs); /////////////////
 
   return (
     <div>
@@ -109,9 +88,10 @@ const App = () => {
             buttonLabelOn="Add New Blog?"
           >
             <BlogForm
-              submitNewBlog={submitNewBlog}
-              newBlog={newBlog}
-              handleChange={handleNewBlogChange}
+              setBlogs={setBlogs}
+              setMsgBlock={setMsgBlock}
+              blogs={blogs}
+              user={user}
             />
           </Togglable>
           <h2>Blog Links</h2>
