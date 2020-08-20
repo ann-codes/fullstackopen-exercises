@@ -37,7 +37,14 @@ const App = () => {
   const blogsList = blogs
     ? blogs
         .sort((a, b) => b.likes - a.likes)
-        .map((blog) => <Blog key={blog.id} blog={blog} />)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            setMsgBlock={setMsgBlock}
+          />
+        ))
     : "loading...";
 
   return (
@@ -56,9 +63,9 @@ const App = () => {
           >
             <BlogForm
               setBlogs={setBlogs}
-              setMsgBlock={setMsgBlock}
               blogs={blogs}
               user={user}
+              setMsgBlock={setMsgBlock} 
             />
           </Togglable>
           <h2>Blog Links</h2>
