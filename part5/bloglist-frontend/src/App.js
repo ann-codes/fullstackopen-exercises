@@ -36,15 +36,15 @@ const App = () => {
 
   const blogsList = blogs
     ? blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user}
-            setMsgBlock={setMsgBlock}
-          />
-        ))
+      .sort((a, b) => b.likes - a.likes)
+      .map((blog) => (
+        <Blog
+          key={blog.id}
+          blog={blog}
+          user={user}
+          setMsgBlock={setMsgBlock}
+        />
+      ))
     : "loading...";
 
   return (
