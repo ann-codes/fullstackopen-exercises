@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import blogService from "../services/blogs";
 
 const Blog = ({ blog, setMsgBlock, user }) => {
   const [vis, setVis] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
-  const [notDeleted, setNotDeleted] = useState(true); 
+  const [notDeleted, setNotDeleted] = useState(true);
   // using display: none to hide the deleted though html is still there
-  // alt way: pass blogs and setBlogs prop and remove deleted blog via filter 
+  // alt way: pass blogs and setBlogs prop and remove deleted blog via filter
 
   const addLike = async () => {
     try {
@@ -53,6 +54,12 @@ const Blog = ({ blog, setMsgBlock, user }) => {
       </div>
     </div>
   );
+};
+
+Blog.propTypes = {
+  setMsgBlock: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 export default Blog;

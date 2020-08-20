@@ -65,7 +65,7 @@ const App = () => {
               setBlogs={setBlogs}
               blogs={blogs}
               user={user}
-              setMsgBlock={setMsgBlock} 
+              setMsgBlock={setMsgBlock}
             />
           </Togglable>
           <h2>Blog Links</h2>
