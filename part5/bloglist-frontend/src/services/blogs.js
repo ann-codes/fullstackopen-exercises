@@ -15,8 +15,6 @@ const create = async (newBlog) => {
   return res.data;
 };
 
-const update = async (newBlog) => {
-  
-}
+// const update = async (newBlog) => {};
 
 export default { getAll, create, setToken };

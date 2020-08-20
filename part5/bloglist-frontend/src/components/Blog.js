@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import blogService from "../services/blogs";
+// import blogService from "../services/blogs";
 
 const Blog = ({ blog }) => {
   const [vis, setVis] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
 
-  const addLike = () => {};
+  // const addLike = () => {};
 
   return (
     <div className="blog-box">
