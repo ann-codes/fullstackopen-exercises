@@ -78,7 +78,7 @@ blogRouter.delete("/:id", async (req, res) => {
       res.status(204).end();
       console.log("BLOG DELETED");
     } catch (ex) {
-      res.status(400).end();
+      res.status(400).json({ error: "bad request, error deleting" });
       console.log("400 ERROR DELETING, BAD REQUEST");
     }
   } else {

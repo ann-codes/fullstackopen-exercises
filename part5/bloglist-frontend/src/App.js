@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
 import blogService from "./services/blogs";
-
 import Blog from "./components/Blog";
 import MessageBlock from "./components/MessageBlock";
 import LoginForm from "./components/LoginForm";
@@ -35,7 +34,6 @@ const App = () => {
     setUser({ token: "", name: "", username: "" });
   };
 
-  // =========== helper change to component later, combine w/ return obj below
   const blogsList = blogs
     ? blogs
         .sort((a, b) => b.likes - a.likes)
