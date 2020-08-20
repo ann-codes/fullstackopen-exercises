@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from "react";
 import blogService from "./services/blogs";
-
 import Blog from "./components/Blog";
 import MessageBlock from "./components/MessageBlock";
 import LoginForm from "./components/LoginForm";
@@ -35,11 +34,17 @@ const App = () => {
     setUser({ token: "", name: "", username: "" });
   };
 
-  // =========== helper change to component later, combine w/ return obj below
   const blogsList = blogs
     ? blogs
         .sort((a, b) => b.likes - a.likes)
-        .map((blog) => <Blog key={blog.id} blog={blog} />)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            setMsgBlock={setMsgBlock}
+          />
+        ))
     : "loading...";
 
   return (
@@ -58,9 +63,9 @@ const App = () => {
           >
             <BlogForm
               setBlogs={setBlogs}
-              setMsgBlock={setMsgBlock}
               blogs={blogs}
               user={user}
+              setMsgBlock={setMsgBlock} 
             />
           </Togglable>
           <h2>Blog Links</h2>
