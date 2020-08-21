@@ -12,6 +12,12 @@ body {
   padding: 1rem;
 }
 
+/* --- */
+
+.bold-med {
+  font-weight: bold;
+}
+
 .success {
   border: green 3px solid;
   border-radius: 10px;
