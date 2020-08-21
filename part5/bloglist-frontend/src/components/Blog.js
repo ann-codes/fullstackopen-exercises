@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import blogService from "../services/blogs";
+import Likes from "./Likes";
 
 const Blog = ({ blog, setMsgBlock, user }) => {
   const [vis, setVis] = useState(false);
@@ -39,17 +40,21 @@ const Blog = ({ blog, setMsgBlock, user }) => {
 
   return (
     <div className="blog-box" style={{ display: notDeleted ? "" : "none" }}>
-      {blog.title} by {blog.author}{" "}
+      <span className="bold-med">
+        {blog.title} by {blog.author}{" "}
+      </span>
       <button onClick={() => setVis(!vis)}>{vis ? "hide" : "view"}</button>
-      <div style={{ display: vis ? "" : "none" }}>
-        <a href={blog.url} target="_blank" rel="noopener noreferrer">
-          {blog.url}
-        </a>
-        <br />
-        Likes: {likes} <button onClick={() => addLike()}>+</button>
-        <br />
-        Posted by {blog.user.name}
-        <br />
+      <div className="blog-deets" style={{ display: vis ? "block" : "none" }}>
+        <ul>
+          <li>
+            <a href={blog.url} target="_blank" rel="noopener noreferrer">
+              {blog.url}
+            </a>
+          </li>
+          <Likes likes={likes} addLike={addLike} />
+          <li>Posted by {blog.user.name}</li>
+        </ul>
+
         <button onClick={() => deleteBlog()}>Delete</button>
       </div>
     </div>
