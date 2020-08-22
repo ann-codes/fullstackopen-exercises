@@ -36,19 +36,20 @@ const App = () => {
 
   const blogsList = blogs
     ? blogs
-      .sort((a, b) => b.likes - a.likes)
-      .map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          user={user}
-          setMsgBlock={setMsgBlock}
-        />
-      ))
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            setMsgBlock={setMsgBlock}
+          />
+        ))
     : "loading...";
 
   return (
     <div>
+      <h1>Blog List App</h1>
       <MessageBlock msgBlock={msgBlock} setter={setMsgBlock} />
       {!user.token ? (
         <LoginForm setUser={setUser} setMsgBlock={setMsgBlock} />
@@ -69,7 +70,7 @@ const App = () => {
             />
           </Togglable>
           <h2>Blog Links</h2>
-          {blogsList}
+          {blogsList.length > 0 ? blogsList : "No blog links!"}
         </Fragment>
       )}
     </div>
