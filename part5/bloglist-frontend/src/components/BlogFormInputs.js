@@ -9,6 +9,7 @@ const BlogFormInputs = ({ submitNewBlog, handleNewBlogChange, newBlog }) => {
           type="text"
           value={newBlog.title}
           name="title"
+          id="title"
           onChange={handleNewBlogChange}
         />
       </div>
@@ -28,6 +29,7 @@ const BlogFormInputs = ({ submitNewBlog, handleNewBlogChange, newBlog }) => {
           type="text"
           value={newBlog.url}
           name="url"
+          id="url"
           onChange={handleNewBlogChange}
         />
       </div>
