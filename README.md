@@ -41,7 +41,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - b props.children and proptypes
   - c Testing React apps
   - d End to end -testing
-- Part 6 State management with Redux
+- [Part 6 State management with Redux](/part6/)
   - a Flux-architecture and Redux
   - b Many reducers
   - c Communicating with server in a redux application
