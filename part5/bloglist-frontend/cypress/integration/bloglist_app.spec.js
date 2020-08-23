@@ -28,6 +28,7 @@ describe("Blog app", function () {
     cy.get(".btn-submit").click();
     cy.contains("invalid username or password");
     cy.get(".warning").should("have.css", "border", "3px solid rgb(255, 0, 0)");
+    cy.get("html").should("not.contain", "Adam Test logged in");
   });
 
   it("5.18 Succeeds with correct credentials", function () {
@@ -41,7 +42,6 @@ describe("Blog app", function () {
     cy.get("#username").type("adamguy");
     cy.get("#password").type("adamguy");
     cy.get(".btn-submit").click();
-    cy.contains("Adam Test logged-in");
 
     cy.contains("Add New Blog?").click();
     cy.get("#title").type("Using Cypress");
@@ -53,16 +53,13 @@ describe("Blog app", function () {
 
   describe("5.20-5.21", function () {
     beforeEach(function () {
-      cy.get("#username").type("adamguy");
-      cy.get("#password").type("adamguy");
-      cy.get(".btn-submit").click();
-      cy.contains("Adam Test logged-in");
+      cy.login({ username: "adamguy", password: "adamguy" });
 
-      cy.contains("Add New Blog?").click();
-      cy.get("#title").type("Using Cypress");
-      cy.get("#author").type("Cypress");
-      cy.get("#url").type("https://docs.cypress.io/");
-      cy.contains("Add blog").click();
+      cy.createBlog({
+        title: "Using Cypress",
+        author: "Cypress",
+        url: "https://docs.cypress.io/2",
+      });
     });
 
     it("5.20 A user can like a blog", function () {
@@ -80,9 +77,8 @@ describe("Blog app", function () {
 
     it("5.21 A user can't delete a blog list they didn't created", function () {
       cy.contains("Logout").click();
-      cy.get("#username").type("kitty");
-      cy.get("#password").type("kitty");
-      cy.get(".btn-submit").click();
+      cy.login({ username: "kitty", password: "kitty" });
+
       cy.contains("view").click();
       cy.contains("Delete").click();
       cy.contains("user id and token mismatch");
@@ -90,33 +86,27 @@ describe("Blog app", function () {
   });
 
   it("5.22 The Blog list are ordered by likes", function () {
-    cy.get("#username").type("kitty");
-    cy.get("#password").type("kitty");
-    cy.get(".btn-submit").click();
+    cy.login({ username: "kitty", password: "kitty" });
+    cy.createBlog({
+      title: "Cats Are Using Cypress",
+      author: "Catpress",
+      url: "https://cats.cypress.io/",
+    });
+    cy.visit("http://localhost:3000");
 
-    cy.contains("Add New Blog?").click();
-    cy.get("#title").type("Cats Are Using Cypress");
-    cy.get("#author").type("Catpress");
-    cy.get("#url").type("https://cats.cypress.io/");
-    cy.contains("Add blog").click();
-
-    cy.get("#title").type("Kats Are Using Cypress");
-    cy.get("#author").type("Katpress");
-    cy.get("#url").type("https://cats.kypress.io/");
-    cy.contains("Add blog").click();
-
+    cy.createBlog({
+      title: "Kats Are Using Cypress",
+      author: "Catpress",
+      url: "https://kats.cypress.io/",
+    });
     cy.contains("Logout").click();
 
-    cy.get("#username").type("adamguy");
-    cy.get("#password").type("adamguy");
-    cy.get(".btn-submit").click();
-    cy.contains("Adam Test logged-in");
-
-    cy.contains("Add New Blog?").click();
-    cy.get("#title").type("Using Cypress");
-    cy.get("#author").type("Cypress");
-    cy.get("#url").type("https://docs.cypress.io/");
-    cy.contains("Add blog").click();
+    cy.login({ username: "adamguy", password: "adamguy" });
+    cy.createBlog({
+      title: "Using Cypress",
+      author: "Cypress",
+      url: "https://docs.cypress.io/2",
+    });
 
     for (let i = 1; i < 4; i++) {
       cy.get(".blog-box")
@@ -128,17 +118,12 @@ describe("Blog app", function () {
         cy.get(".blog-box")
           .eq(i - 1)
           .contains("+")
-          .click();
-        cy.get(".blog-box")
-          .eq(i - 1)
-          .contains("+")
+          .click()
           .click();
       }
     }
 
-    cy.contains("+").click();
-    cy.contains("+").click();
-    cy.contains("+").click();
+    cy.contains("+").click().click().click();
 
     cy.visit("http://localhost:3000");
 
