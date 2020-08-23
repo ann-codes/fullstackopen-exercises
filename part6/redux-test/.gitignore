@@ -24,4 +24,4 @@ yarn-error.log*
 
 # to work on diff comps
 yarn.lock
-package-lock.json
+package-lock.json 
