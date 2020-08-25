@@ -1,0 +1,55 @@
+body {
+  margin: 2rem 0 1rem;
+}
+
+.m-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.bold-med {
+  font-weight: bold;
+}
+
+.success {
+  border: green 3px solid;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: lightgreen;
+  color: darkgreen;
+}
+
+.notice {
+  border: blue 3px solid;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: lightblue;
+  color: navy;
+}
+
+.warning {
+  border: red 3px solid;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: lightsalmon;
+  color: maroon;
+}
+
+.fade-out {
+  animation: fadeOut ease 6s;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
