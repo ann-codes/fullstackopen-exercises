@@ -17,6 +17,7 @@ const counterReducer = (state = 0, action) => {
 
 const store = createStore(counterReducer);
 
+// "subscribes" to every change in the store
 store.subscribe(() => {
   const storeNow = store.getState();
   console.log(storeNow);
@@ -41,6 +42,7 @@ const renderApp = () => {
   ReactDOM.render(<App />, document.getElementById("root"));
 };
 
+// don't forget this
 renderApp();
 store.subscribe(renderApp);
 
