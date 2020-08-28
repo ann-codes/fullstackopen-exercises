@@ -1,8 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { voteOne } from "../reducers/anecdoteReducer";
-import { notify } from "../reducers/notificationReducer";
-import anecService from "../services/anecdotes";
+import { setNotification } from "../reducers/notificationReducer";
 
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecdotes);
@@ -11,9 +10,8 @@ const AnecdoteList = () => {
 
   const voteAnecdote = async (e) => {
     const foundAnec = anecdotes.find((a) => a.id === e.target.id);
-    dispatch(voteOne(e.target.id));
-    dispatch(notify(`You voted for: "${foundAnec.content}"`));
-    await anecService.updateVote(foundAnec.id, foundAnec);
+    dispatch(voteOne(foundAnec.id, foundAnec));
+    dispatch(setNotification(`You voted for: "${foundAnec.content}"`, 3));
   };
 
   const filteredAnecdotes = anecdotes.filter((anec) =>
