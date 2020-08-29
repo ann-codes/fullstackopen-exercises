@@ -1,0 +1,26 @@
+body {
+  margin: 2rem 0 1rem;
+}
+
+.m-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.bold-med {
+  font-weight: bold;
+}
+
+nav {
+  padding: 1rem;
+  text-align: center;
+  background-color: lightgreen;
+}
+
+
+footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  text-align: center;
+  background-color: lightgreen;
+}
