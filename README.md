@@ -45,7 +45,8 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - a Flux-architecture and Redux
   - b Many reducers
   - c Communicating with server in a redux application
-  - d connect
+  - d connect ([See app covering 6D only, using connect](https://github.com/ann-codes/fullstackopen-exercises/tree/6D))
+  - [See app covering 6A-C for reference](/part6/redux-anecdotes/)
 - Part 7 React router, custom hooks, styling app with CSS and webpack
   - a React-router
   - b Custom hooks
