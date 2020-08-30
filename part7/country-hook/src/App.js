@@ -3,23 +3,25 @@ import axios from "axios";
 
 const useField = (type) => {
   const [value, setValue] = useState("");
-
   const onChange = (event) => {
     setValue(event.target.value);
   };
-
-  return {
-    type,
-    value,
-    onChange,
-  };
+  return { type, value, onChange };
 };
 
 const useCountry = (name) => {
   const [country, setCountry] = useState(null);
-
-  useEffect();
-
+  const fetch = () => {
+    axios
+      .get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
+      .then((res) => {
+        setCountry(res);
+      })
+      .catch((ex) => {
+        console.log("EXCEPTION:", ex);
+      });
+  };
+  useEffect(fetch, [name]);
   return country;
 };
 
@@ -27,10 +29,12 @@ const Country = ({ country }) => {
   if (!country) {
     return null;
   }
-
-  if (!country.found) {
+  // had to edit existing code to make it work w/ DS??
+  if (country.status !== 200) {
     return <div>not found...</div>;
   }
+
+  country.data = country.data[0];
 
   return (
     <div>
