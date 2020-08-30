@@ -1,0 +1,19 @@
+{
+  "notes": [
+    {
+      "content": "Custom hooks are absolutely awesome!",
+      "id": 1
+    },
+    {
+      "content": "Best feature ever <3",
+      "id": 2
+    }
+  ],
+  "persons": [
+    {
+      "name": "ann",
+      "number": "040-5483923",
+      "id": 1
+    }
+  ]
+}
