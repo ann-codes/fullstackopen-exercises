@@ -1,49 +1,49 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
+import useField from "../hooks/useField";
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const content = useField("text");
+  const author = useField("text");
+  const info = useField("text");
 
   const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.addNew({ content, author, info, votes: 0 });
-    props.setNotification(`${content} has been added to the list!`);
+    props.addNew({
+      content: content.value,
+      author: author.value,
+      info: info.value,
+      votes: 0,
+    });
+    props.setNotification(`${content.value} has been added to the list!`);
     history.push("/anecdotes");
+  };
+
+  const clearAll = () => {
+    content.reset();
+    author.reset();
+    info.reset();
   };
 
   return (
     <div>
-      <h2>create a new anecdote</h2>
+      <h2>Create a New Anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          content: <input {...content} reset={null} />
         </div>
         <div>
-          author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          author: <input {...author} reset={null} />
         </div>
         <div>
-          url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          url for more info: <input {...info} reset={null} />
         </div>
-        <button >create</button>
+        <button type="submit">create</button>{" "}
+        <button type="button" onClick={() => clearAll()}>
+          reset
+        </button>
       </form>
     </div>
   );
