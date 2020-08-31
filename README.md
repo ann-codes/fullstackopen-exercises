@@ -47,10 +47,10 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - c Communicating with server in a redux application ([See app covering 6A-C, the "newer" way](/part6/redux-anecdotes/))
   - d connect ([See app covering connect only, on separate branch](https://github.com/ann-codes/fullstackopen-exercises/tree/6D))
 - [Part 7 React router, custom hooks, styling app with CSS and webpack](/part7/)
-  - a React-router
-  - b Custom hooks
+  - a [React-router](/part7/routed-anecdotes/)
+  - b Custom hooks: [example1](/part7/country-hook/) & [example2](/part7/ultimate-hooks/)
   - c More about styles
-  - d Webpack
+  - d [Webpack](/part7/webpack-part7/)
   - e Class components, Miscellaneous
   - f Exercises: extending the bloglist
 - Part 8 GraphQL
