@@ -1,24 +1,33 @@
 import React, { useState, useEffect, Fragment } from "react";
 import blogService from "./services/blogs";
-import Blog from "./components/Blog";
+// import Blog from "./components/Blog";
 import MessageBlock from "./components/MessageBlock";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import { useDispatch } from "react-redux";
+import { initBlogs } from "./reducers/blogReducer";
 
 import "./App.css";
+import BlogList from "./components/BlogList";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState({ token: "", name: "", username: "" });
-  const [msgBlock, setMsgBlock] = useState({ css: "", msg: "" });
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async function fetchData() {
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
-    })();
-  }, []);
+    dispatch(initBlogs());
+  }, [dispatch]);
+
+  // const [blogs, setBlogs] = useState([]);
+  const [user, setUser] = useState({ token: "", name: "", username: "" });
+  // const [msgBlock, setMsgBlock] = useState({ css: "", msg: "" });
+
+  // useEffect(() => {
+  //   (async function fetchData() {
+  //     const blogs = await blogService.getAll();
+  //     setBlogs(blogs);
+  //   })();
+  // }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("bloglist-token");
@@ -34,25 +43,12 @@ const App = () => {
     setUser({ token: "", name: "", username: "" });
   };
 
-  const blogsList = blogs
-    ? blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user}
-            setMsgBlock={setMsgBlock}
-          />
-        ))
-    : "loading...";
-
   return (
     <div>
       <h1>Blog List App</h1>
-      <MessageBlock msgBlock={msgBlock} setter={setMsgBlock} />
+      <MessageBlock />
       {!user.token ? (
-        <LoginForm setUser={setUser} setMsgBlock={setMsgBlock} />
+        <LoginForm setUser={setUser} />
       ) : (
         <Fragment>
           <div>
@@ -62,15 +58,10 @@ const App = () => {
             buttonLabelOff="Nevermind, No Blog!"
             buttonLabelOn="Add New Blog?"
           >
-            <BlogForm
-              setBlogs={setBlogs}
-              blogs={blogs}
-              user={user}
-              setMsgBlock={setMsgBlock}
-            />
+            <BlogForm user={user} />
           </Togglable>
           <h2>Blog Links</h2>
-          {blogsList.length > 0 ? blogsList : "No blog links!"}
+          <BlogList user={user} />
         </Fragment>
       )}
     </div>
