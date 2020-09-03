@@ -6,11 +6,11 @@ export const HIDE_MSG = "HIDE_MSG";
 const msgBlockReducer = (state = { css: "", msg: "" }, action) => {
   switch (action.type) {
     case GREEN_MSG:
-      return action.data.content;
+      return { css: "success fade-out", msg: action.data.content };
     case RED_MSG:
-      return action.data.content;
+      return { css: "warning fade-out", msg: action.data.content };
     case BLUE_MSG:
-      return action.data.content;
+      return { css: "notice fade-out", msg: action.data.content };
     case HIDE_MSG:
       return { css: "", msg: "" };
     default:

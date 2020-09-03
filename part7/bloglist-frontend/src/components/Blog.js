@@ -22,13 +22,7 @@ const Blog = ({ blog, user }) => {
       setLikes(likes + 1);
     } catch (ex) {
       // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
-      dispatch(
-        setMsgBlock(
-          { css: "warning fade-out", msg: ex.response.data.error },
-          RED_MSG,
-          3
-        )
-      );
+      dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
     }
   };
 
@@ -40,34 +34,16 @@ const Blog = ({ blog, user }) => {
       try {
         await blogService.deleteBlog(blog.id, user.token);
         // setMsgBlock({ css: "notice fade-out", msg: "BLOG DELETED" });
-        dispatch(
-          setMsgBlock(
-            { css: "notice fade-out", msg: "BLOG DELETED" },
-            BLUE_MSG,
-            3
-          )
-        );
+        dispatch(setMsgBlock("BLOG DELETED", BLUE_MSG, 3));
         setNotDeleted(false);
       } catch (ex) {
         console.log(ex.response.data.error);
         // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
-        dispatch(
-          setMsgBlock(
-            { css: "warning fade-out", msg: ex.response.data.error },
-            RED_MSG,
-            3
-          )
-        );
+        dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
       }
     } else {
       // setMsgBlock({ css: "notice fade-out", msg: "delete request cancelled" });
-      dispatch(
-        setMsgBlock(
-          { css: "notice fade-out", msg: "delete request cancelled" },
-          BLUE_MSG,
-          3
-        )
-      );
+      dispatch(setMsgBlock("delete request cancelled", BLUE_MSG, 3));
     }
   };
 

@@ -3,8 +3,12 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 import msgBlockReducer from "./reducers/msgBlockReducer";
+import blogReducer from "./reducers/blogReducer";
 
-const reducer = combineReducers({ msgBlock: msgBlockReducer });
+const reducer = combineReducers({
+  msgBlock: msgBlockReducer,
+  blogs: blogReducer,
+});
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
 

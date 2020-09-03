@@ -24,13 +24,7 @@ const LoginForm = ({ setUser }) => {
       setUser(user);
     } catch (ex) {
       // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
-      dispatch(
-        setMsgBlock(
-          { css: "warning fade-out", msg: ex.response.data.error },
-          RED_MSG,
-          3
-        )
-      );
+      dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
       // getting error message from json set in controller here ^^
     }
   };
