@@ -18,7 +18,7 @@ const App = () => {
     dispatch(initBlogs());
   }, [dispatch]);
 
-  const [blogs, setBlogs] = useState([]);
+  // const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState({ token: "", name: "", username: "" });
   // const [msgBlock, setMsgBlock] = useState({ css: "", msg: "" });
 
@@ -61,7 +61,7 @@ const App = () => {
             <BlogForm user={user} />
           </Togglable>
           <h2>Blog Links</h2>
-          <BlogList blogs={blogs} user={user} />
+          <BlogList user={user} />
         </Fragment>
       )}
     </div>
