@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 
-const LoginForm = ({ setUser, setMsgBlock }) => {
+import { setMsgBlock, RED_MSG } from "../reducers/msgBlockReducer";
+
+const LoginForm = ({ setUser }) => {
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,7 +23,14 @@ const LoginForm = ({ setUser, setMsgBlock }) => {
       blogService.setToken(user.token);
       setUser(user);
     } catch (ex) {
-      setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+      // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+      dispatch(
+        setMsgBlock(
+          { css: "warning fade-out", msg: ex.response.data.error },
+          RED_MSG,
+          3
+        )
+      );
       // getting error message from json set in controller here ^^
     }
   };
@@ -47,7 +59,9 @@ const LoginForm = ({ setUser, setMsgBlock }) => {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit" className="btn-submit">Login</button>
+        <button type="submit" className="btn-submit">
+          Login
+        </button>
       </form>
     </div>
   );
@@ -55,7 +69,6 @@ const LoginForm = ({ setUser, setMsgBlock }) => {
 
 LoginForm.propTypes = {
   setUser: PropTypes.func.isRequired,
-  setMsgBlock: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

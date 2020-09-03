@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 import blogService from "../services/blogs";
 import Likes from "./Likes";
 
-const Blog = ({ blog, setMsgBlock, user }) => {
+import { setMsgBlock, BLUE_MSG, RED_MSG } from "../reducers/msgBlockReducer";
+import { useDispatch } from "react-redux";
+
+const Blog = ({ blog, user }) => {
+  const dispatch = useDispatch();
+
   const [vis, setVis] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
   const [notDeleted, setNotDeleted] = useState(true);
@@ -16,7 +21,14 @@ const Blog = ({ blog, setMsgBlock, user }) => {
       await blogService.update(blog.id, payload);
       setLikes(likes + 1);
     } catch (ex) {
-      setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+      // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+      dispatch(
+        setMsgBlock(
+          { css: "warning fade-out", msg: ex.response.data.error },
+          RED_MSG,
+          3
+        )
+      );
     }
   };
 
@@ -27,14 +39,35 @@ const Blog = ({ blog, setMsgBlock, user }) => {
     if (confirmDelete) {
       try {
         await blogService.deleteBlog(blog.id, user.token);
-        setMsgBlock({ css: "notice fade-out", msg: "BLOG DELETED" });
+        // setMsgBlock({ css: "notice fade-out", msg: "BLOG DELETED" });
+        dispatch(
+          setMsgBlock(
+            { css: "notice fade-out", msg: "BLOG DELETED" },
+            BLUE_MSG,
+            3
+          )
+        );
         setNotDeleted(false);
       } catch (ex) {
         console.log(ex.response.data.error);
-        setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+        // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
+        dispatch(
+          setMsgBlock(
+            { css: "warning fade-out", msg: ex.response.data.error },
+            RED_MSG,
+            3
+          )
+        );
       }
     } else {
-      setMsgBlock({ css: "notice fade-out", msg: "delete request cancelled" });
+      // setMsgBlock({ css: "notice fade-out", msg: "delete request cancelled" });
+      dispatch(
+        setMsgBlock(
+          { css: "notice fade-out", msg: "delete request cancelled" },
+          BLUE_MSG,
+          3
+        )
+      );
     }
   };
 
@@ -62,7 +95,6 @@ const Blog = ({ blog, setMsgBlock, user }) => {
 };
 
 Blog.propTypes = {
-  setMsgBlock: PropTypes.func.isRequired,
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
