@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-// import blogService from "../services/blogs";
 import Likes from "./Likes";
 
 import { setMsgBlock, BLUE_MSG, RED_MSG } from "../reducers/msgBlockReducer";
@@ -19,11 +18,9 @@ const Blog = ({ blog, user }) => {
   const addLike = async () => {
     try {
       const payload = { ...blog, likes: likes + 1 };
-      // await blogService.update(blog.id, payload);
       dispatch(likeBlog(blog.id, payload));
       setLikes(likes + 1);
     } catch (ex) {
-      // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
       dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
     }
   };
@@ -34,19 +31,13 @@ const Blog = ({ blog, user }) => {
     );
     if (confirmDelete) {
       try {
-        // await blogService.deleteBlog(blog.id, user.token);
-
         await dispatch(deleteBlog(blog.id, user.token));
-        // setMsgBlock({ css: "notice fade-out", msg: "BLOG DELETED" });
         dispatch(setMsgBlock("BLOG DELETED", BLUE_MSG, 3));
         setNotDeleted(false);
       } catch (ex) {
-        // console.log(ex.response.data.error);
-        // setMsgBlock({ css: "warning fade-out", msg: ex.response.data.error });
         dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
       }
     } else {
-      // setMsgBlock({ css: "notice fade-out", msg: "delete request cancelled" });
       dispatch(setMsgBlock("delete request cancelled", BLUE_MSG, 3));
     }
   };
