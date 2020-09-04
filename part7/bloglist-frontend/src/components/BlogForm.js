@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-// import blogService from "../services/blogs";
 import userService from "../services/users";
 import BlogFormInputs from "./BlogFormInputs";
 
@@ -18,26 +17,11 @@ const BlogForm = ({ user }) => {
     try {
       const userId = await userService.findByUsername(user.username);
       payload.userId = userId.id;
-      // const created = await blogService.create(payload);
-      dispatch(createBlog(payload));
-      // if (created) {
-      // setBlogs(blogs.concat({ ...created, user: userId }));
+      await dispatch(createBlog(payload));
       setNewBlog({ title: "", author: "", url: "" });
-      // setMsgBlock({ css: "success fade-out", msg: "new blog added!" });
       dispatch(setMsgBlock("new blog added!", GREEN_MSG, 3));
-      // }
     } catch (ex) {
-      // setMsgBlock({
-      //   css: "warning fade-out",
-      //   msg: ex.response ? ex.response.data.error : "400 Unknown Error",
-      // });
-      dispatch(
-        setMsgBlock(
-          ex.response ? ex.response.data.error : "400 Unknown Error",
-          RED_MSG,
-          3
-        )
-      );
+      dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
     }
   };
 
