@@ -1,12 +1,16 @@
 import React, { useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import MessageBlock from "./components/MessageBlock";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import BlogList from "./components/BlogList";
+import Navigation from "./components/Navigation";
+import UsersList from "./components/UsersList";
 import { initBlogs } from "./reducers/blogReducer";
-import { setUserByLocalStorage, logoutUser } from "./reducers/loginReducer";
+import { initUsers } from "./reducers/usersReducer";
+import { setUserByLocalStorage } from "./reducers/loginReducer";
 import "./App.css";
 
 const App = () => {
@@ -15,6 +19,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initBlogs());
+    dispatch(initUsers());
     dispatch(setUserByLocalStorage());
   }, [dispatch]);
 
@@ -26,15 +31,20 @@ const App = () => {
         <LoginForm />
       ) : (
         <Fragment>
-          <div>
-            {user.name} logged-in
-            <button onClick={() => dispatch(logoutUser())}>Logout</button>
-          </div>
-          <Togglable buttonLabelOff="Cancel Add" buttonLabelOn="Add New Blog">
-            <BlogForm user={user} />
-          </Togglable>
-          <h2>Blog Links</h2>
-          <BlogList />
+          <Navigation user={user} />
+          <Switch>
+            <Route exact path="/users" component={UsersList} />
+            <Route path="/user/:id">
+              <p>HELLO</p>
+            </Route>
+            <Route exact path="/blog-links">
+              <Togglable LabelOff="Cancel Add" LabelOn="Add New Blog">
+                <BlogForm user={user} />
+              </Togglable>
+              <BlogList />
+            </Route>
+            <Route exact path="/" component={UsersList} />
+          </Switch>
         </Fragment>
       )}
     </div>

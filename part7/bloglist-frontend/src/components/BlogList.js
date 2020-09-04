@@ -12,7 +12,12 @@ const BlogList = () => {
         .map((blog) => <Blog key={blog.id} blog={blog} user={user} />)
     : "loading...";
 
-  return blogsList.length > 0 ? blogsList : "No blog links!";
+  return (
+    <>
+      <h2>Blog Links</h2>
+      {blogsList.length > 0 ? blogsList : "No blog links!"}
+    </>
+  );
 };
 
 export default BlogList;
