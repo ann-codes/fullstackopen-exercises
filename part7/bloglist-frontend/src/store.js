@@ -5,10 +5,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import msgBlockReducer from "./reducers/msgBlockReducer";
 import blogReducer from "./reducers/blogReducer";
 import loginReducer from "./reducers/loginReducer";
+import usersReducer from "./reducers/usersReducer";
 
 const reducer = combineReducers({
   msgBlock: msgBlockReducer,
   blogs: blogReducer,
+  usersList: usersReducer,
   user: loginReducer,
 });
 
