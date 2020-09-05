@@ -7,6 +7,18 @@ usersRouter.get("/", async (req, res) => {
   res.json(users.map((u) => u.toJSON()));
 });
 
+usersRouter.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate("blogs", {
+      title: 1,
+      url: 1,
+    });
+    res.json(user);
+  } catch (ex) {
+    res.status(400).json({ error: `Id of ${req.params.id} not found.` });
+  }
+});
+
 usersRouter.post("/", async (req, res) => {
   const body = req.body;
   const saltRounds = 10;
