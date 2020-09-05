@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import MessageBlock from "./components/MessageBlock";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
@@ -12,6 +12,7 @@ import { initBlogs } from "./reducers/blogReducer";
 import { initUsers } from "./reducers/usersReducer";
 import { setUserByLocalStorage } from "./reducers/loginReducer";
 import "./App.css";
+import UserStats from "./components/UserStats";
 
 const App = () => {
   const user = useSelector((state) => state.user);
@@ -35,7 +36,7 @@ const App = () => {
           <Switch>
             <Route exact path="/users" component={UsersList} />
             <Route path="/user/:id">
-              <p>HELLO</p>
+              <UserStats />
             </Route>
             <Route exact path="/blog-links">
               <Togglable LabelOff="Cancel Add" LabelOn="Add New Blog">
