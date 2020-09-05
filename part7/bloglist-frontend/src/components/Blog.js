@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Likes from "./Likes";
 
@@ -45,9 +46,13 @@ const Blog = ({ blog, user }) => {
   return (
     <div className="blog-box" style={{ display: notDeleted ? "" : "none" }}>
       <span className="bold-med">
-        {blog.title} by {blog.author}{" "}
+        <Link to={`/blog/${blog.id}`}>
+          {blog.title} by {blog.author}
+        </Link>{" "}
       </span>
-      <button onClick={() => setVis(!vis)}>{vis ? "hide" : "view"}</button>
+      <button onClick={() => setVis(!vis)}>
+        {vis ? "hide" : "quick view"}
+      </button>
       <div className="blog-deets" style={{ display: vis ? "block" : "none" }}>
         <ul>
           <li>
@@ -58,8 +63,9 @@ const Blog = ({ blog, user }) => {
           <Likes likes={likes} addLike={addLike} />
           <li>Posted by {blog.user.name}</li>
         </ul>
-
-        <button onClick={() => deleteBlogConfirm()}>Delete</button>
+        {blog.user.username === user.username && (
+          <button onClick={() => deleteBlogConfirm()}>Delete</button>
+        )}
       </div>
     </div>
   );

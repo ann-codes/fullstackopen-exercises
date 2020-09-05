@@ -9,6 +9,18 @@ blogRouter.get("/", async (req, res) => {
   res.json(blogs);
 });
 
+blogRouter.get("/:id", async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id).populate("user", {
+      username: 1,
+      name: 1
+    });
+    res.json(blog);
+  } catch (ex) {
+    res.status(400).json({ error: `Id of ${req.params.id} not found.` });
+  }
+});
+
 blogRouter.post("/", async (req, res) => {
   const token = req.token;
   const decodedToken = jwt.verify(token, process.env.SECRET);
