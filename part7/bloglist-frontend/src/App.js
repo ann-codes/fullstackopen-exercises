@@ -2,27 +2,27 @@ import React, { useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import MessageBlock from "./components/MessageBlock";
-import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
-import Togglable from "./components/Togglable";
-import BlogList from "./components/BlogList";
 import Navigation from "./components/Navigation";
 import UsersList from "./components/UsersList";
+import UserStats from "./components/UserStats";
+import LoginForm from "./components/LoginForm";
+import BlogList from "./components/BlogList";
+import BlogPage from "./components/BlogPage";
 import { initBlogs } from "./reducers/blogReducer";
 import { initUsers } from "./reducers/usersReducer";
 import { setUserByLocalStorage } from "./reducers/loginReducer";
 import "./App.css";
-import UserStats from "./components/UserStats";
 
 const App = () => {
   const user = useSelector((state) => state.user);
+  const blogs = useSelector((state) => state.blogs);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initBlogs());
     dispatch(initUsers());
     dispatch(setUserByLocalStorage());
-  }, [dispatch]);
+  }, [dispatch, blogs.length]);
 
   return (
     <div>
@@ -35,15 +35,9 @@ const App = () => {
           <Navigation user={user} />
           <Switch>
             <Route exact path="/users" component={UsersList} />
-            <Route path="/user/:id">
-              <UserStats />
-            </Route>
-            <Route exact path="/blog-links">
-              <Togglable LabelOff="Cancel Add" LabelOn="Add New Blog">
-                <BlogForm user={user} />
-              </Togglable>
-              <BlogList />
-            </Route>
+            <Route exact path="/user/:id" component={UserStats} />
+            <Route exact path="/blog-links" component={BlogList} />
+            <Route exact path="/blog/:id" component={BlogPage} />
             <Route exact path="/" component={UsersList} />
           </Switch>
         </Fragment>
