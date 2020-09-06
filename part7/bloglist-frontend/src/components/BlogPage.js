@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
+import CommentsList from "./CommentsList";
+import CommentAdd from "./CommentAdd";
 import Likes from "./Likes";
 
 import { setMsgBlock, BLUE_MSG, RED_MSG } from "../reducers/msgBlockReducer";
-import { likeBlog, deleteBlog } from "../reducers/blogReducer";
+import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 import { findOneBlogById } from "../reducers/findBlogReducer";
 
 const BlogPage = () => {
@@ -14,13 +16,19 @@ const BlogPage = () => {
   const history = useHistory();
   const id = useParams().id;
   const [likes, setLikes] = useState(0);
+  const [commentsList, setCommentsList] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     dispatch(findOneBlogById(id));
-    setLikes(blog.likes);
-  }, [dispatch, id, blog.likes]);
+  }, [dispatch, id]);
 
-  if (!blog) {
+  useEffect(() => {
+    setLikes(blog.likes);
+    setCommentsList(blog.comments);
+  }, [blog.likes, blog.comments]);
+
+  if (!blog || !commentsList) {
     return <p>Searching for blog...</p>;
   } else if (!blog.user) {
     return <p>Searching for blog...</p>;
@@ -30,7 +38,19 @@ const BlogPage = () => {
     try {
       setLikes(likes + 1);
       const payload = { ...blog, likes: likes + 1 };
-      dispatch(likeBlog(blog.id, payload));
+      dispatch(updateBlog(blog.id, payload));
+    } catch (ex) {
+      dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
+    }
+  };
+
+  const submitComment = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = { ...blog, comments: commentsList.concat(newComment) };
+      dispatch(updateBlog(blog.id, payload));
+      setCommentsList(commentsList.concat(newComment));
+      setNewComment("");
     } catch (ex) {
       dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
     }
@@ -45,7 +65,7 @@ const BlogPage = () => {
         await dispatch(deleteBlog(blog.id, user.token));
         dispatch(setMsgBlock("BLOG DELETED", BLUE_MSG, 3));
         history.push("/blog-links");
-        history.go(); // reload and rerender has delay...
+        history.go(); // reload and rerender has delay... :(
       } catch (ex) {
         dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
       }
@@ -56,21 +76,26 @@ const BlogPage = () => {
 
   return (
     <div>
-      <h2 className="bold-med">
-        {blog.title} by {blog.author}{" "}
-      </h2>
+      <h2 className="bold-med">{blog.title}</h2>
       <ul>
+        <li>Written by {blog.author}</li>
         <li>
           <a href={blog.url} target="_blank" rel="noopener noreferrer">
             {blog.url}
           </a>
         </li>
         <Likes likes={likes} addLike={addLike} />
-        <li>Posted by {blog.user.name}</li>
+        <li>Submitted by {blog.user.name}</li>
       </ul>
       {blog.user.username === user.username && (
         <button onClick={() => deleteBlogConfirm()}>Delete</button>
       )}
+      <CommentsList commentsList={commentsList} />
+      <CommentAdd
+        newComment={newComment}
+        submitComment={submitComment}
+        setNewComment={setNewComment}
+      />
     </div>
   );
 };

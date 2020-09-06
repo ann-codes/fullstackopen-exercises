@@ -13,7 +13,7 @@ blogRouter.get("/:id", async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate("user", {
       username: 1,
-      name: 1
+      name: 1,
     });
     res.json(blog);
   } catch (ex) {
@@ -58,6 +58,7 @@ blogRouter.post("/", async (req, res) => {
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes || 0,
+    comments: [],
   };
 
   // then save to mongo
@@ -106,14 +107,15 @@ blogRouter.put("/:id", async (req, res) => {
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes,
+    comments: req.body.comments,
   };
   try {
     await Blog.findByIdAndUpdate(req.params.id, blog, { new: true });
     res.json(blog);
     res.status(200).end();
-    console.log("BLOG UPDATED");
+    console.log("BLOG LINK UPDATED");
   } catch (ex) {
-    res.status(400).end();
+    res.status(400).json({ error: "Error updating blog: " + ex });
     console.log("400 ERROR UPDATING BLOG, BAD REQUEST");
   }
 });

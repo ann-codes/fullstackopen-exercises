@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Likes from "./Likes";
 
 import { setMsgBlock, BLUE_MSG, RED_MSG } from "../reducers/msgBlockReducer";
-import { likeBlog, deleteBlog } from "../reducers/blogReducer";
+import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const Blog = ({ blog, user }) => {
   const addLike = async () => {
     try {
       const payload = { ...blog, likes: likes + 1 };
-      dispatch(likeBlog(blog.id, payload));
+      dispatch(updateBlog(blog.id, payload));
       setLikes(likes + 1);
     } catch (ex) {
       dispatch(setMsgBlock(ex.response.data.error, RED_MSG, 3));
