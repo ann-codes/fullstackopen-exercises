@@ -33,7 +33,7 @@ export const createBlog = (content) => async (dispatch) => {
   dispatch({ type: NEW_BLOG, data: newBlog });
 };
 
-export const likeBlog = (id, content) => async (dispatch) => {
+export const updateBlog = (id, content) => async (dispatch) => {
   const updatedBlog = await blogSvs.update(id, content);
   dispatch({ type: LIKE, data: { ...updatedBlog, id: id } });
 };
