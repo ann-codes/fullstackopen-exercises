@@ -1,15 +1,20 @@
 import React from "react";
+import { Paper } from "@material-ui/core";
 
 const CommentsList = ({ commentsList }) => {
   return (
-    <div>
+    <>
       <h2>Comments</h2>
-      <ul>
-        {commentsList.map((c, i) => (
-          <li key={`${i}-comment`}>{c}</li>
-        ))}
-      </ul>
-    </div>
+      <Paper>
+        <div className="paper-pad">
+          <ul>
+            {commentsList.map((c, i) => (
+              <li key={`${i}-comment`}>{c}</li>
+            ))}
+          </ul>
+        </div>
+      </Paper>
+    </>
   );
 };
 

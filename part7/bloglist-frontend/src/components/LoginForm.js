@@ -3,6 +3,9 @@ import { useDispatch } from "react-redux";
 import { setMsgBlock, RED_MSG } from "../reducers/msgBlockReducer";
 import { loginUser } from "../reducers/loginReducer";
 
+import { Button, TextField, InputAdornment } from "@material-ui/core";
+import { AccountCircle, Lock as LockIcon } from "@material-ui/icons";
+
 const LoginForm = () => {
   const dispatch = useDispatch();
 
@@ -21,31 +24,59 @@ const LoginForm = () => {
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>[ Login ]</h2>
       <form onSubmit={handleLogin}>
         <div>
-          Username:
-          <input
+          <TextField
             type="text"
             name="Username"
             id="username"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
+            label="Username"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="filled"
+            margin="normal"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle color="secondary" />
+                </InputAdornment>
+              ),
+            }}
+            fullWidth
           />
         </div>
         <div>
-          Password:
-          <input
+          <TextField
             type="password"
             name="Password"
             id="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
+            label="Password"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            variant="filled"
+            margin="normal"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockIcon color="secondary" />
+                </InputAdornment>
+              ),
+            }}
+            fullWidth
           />
         </div>
-        <button type="submit" className="btn-submit">
-          Login
-        </button>
+        <div>
+          <Button variant="contained" color="secondary" type="submit">
+            Login
+          </Button>
+        </div>
       </form>
     </div>
   );

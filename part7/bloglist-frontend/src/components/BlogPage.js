@@ -9,6 +9,9 @@ import { setMsgBlock, BLUE_MSG, RED_MSG } from "../reducers/msgBlockReducer";
 import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 import { findOneBlogById } from "../reducers/findBlogReducer";
 
+import { Paper, Button } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
+
 const BlogPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -76,20 +79,32 @@ const BlogPage = () => {
 
   return (
     <div>
-      <h2 className="bold-med">{blog.title}</h2>
-      <ul>
-        <li>Written by {blog.author}</li>
-        <li>
-          <a href={blog.url} target="_blank" rel="noopener noreferrer">
-            {blog.url}
-          </a>
-        </li>
-        <Likes likes={likes} addLike={addLike} />
-        <li>Submitted by {blog.user.name}</li>
-      </ul>
-      {blog.user.username === user.username && (
-        <button onClick={() => deleteBlogConfirm()}>Delete</button>
-      )}
+      <h2 className="bold-med">[ {blog.title} ]</h2>
+      <Paper>
+        <div className="paper-pad">
+          <ul>
+            <li>Written by: {blog.author}</li>
+            <li>
+              Visit:{" "}
+              <a href={blog.url} target="_blank" rel="noopener noreferrer">
+                {blog.url}
+              </a>
+            </li>
+            <li>Submitted by: {blog.user.name}</li>
+            <Likes likes={likes} addLike={addLike} />
+          </ul>
+          {blog.user.username === user.username && (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<Delete />}
+              onClick={() => deleteBlogConfirm()}
+            >
+              Delete Link
+            </Button>
+          )}
+        </div>
+      </Paper>
       <CommentsList commentsList={commentsList} />
       <CommentAdd
         newComment={newComment}

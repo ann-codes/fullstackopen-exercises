@@ -1,7 +1,9 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { findOneUserById } from "../reducers/findUserReducer";
+
+import { Paper } from "@material-ui/core";
 
 const UserStats = () => {
   const dispatch = useDispatch();
@@ -19,11 +21,16 @@ const UserStats = () => {
   }
 
   const mapBlogs = user.blogs.map((b) => <li key={b.id}>{b.title}</li>);
+  const noneFound = <li>{user.name} has not submitted any blog links. </li>;
 
   return (
     <>
-      <h2>{user.name}'s blog links:</h2>
-      <ul>{mapBlogs}</ul>
+      <h2>[ {user.name}'s Blog Links ]</h2>
+      <Paper>
+        <div className="paper-pad">
+          <ul>{mapBlogs.length > 0 ? mapBlogs : noneFound}</ul>
+        </div>
+      </Paper>
     </>
   );
 };
