@@ -52,7 +52,10 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - c More about styles
   - d [Webpack](/part7/webpack-part7/)
   - e Class components, Miscellaneous
-  - f Exercises: extending the bloglist
+  - f Exercises: extending the bloglist: [frontend](/part7/bloglist-frontend/), [backend](/part7/bloglist-backend/)
+  - <figure class="video_container"><video controls="true" allowfullscreen="true"><source src="https://video.twimg.com/tweet_video/EhR-SfQWAAABshs.mp4" type="video/mp4"></video></figure>
+  - 7.21 Course Feedback - Since I don't have access to the moodle (you need to be a credit earning UoH student), I will write my review here instead: 
+    - For someone with some intermediate experience in React, Node, and Mongo but are by no means an expert in any of these tools, this course is exceptional. It allowed me to practice what I already know and provide further insight into new aspects and processes in working with the MERN stack. The follow-along examples give enough hints to complete the exercises, but not so much that it handholds the student. The course employs scaffolding and requires the student to understand and complete each section before advancing to the next. This has been very effective in my learning. I have some suggestions: to break the exercises in 7F to other sections (even though it may not be directly related to the readings) so that it does not feel so overwhelming for the student when they get to that point. Another suggestion would be to create a community in Slack or Discord rather than Telegram. Telegram is not so easy to follow along as it is one big chatroom, whereas Slack or Discord will allow for channels that can better organize the discussion. Those are pretty slight complaints, as overall, the course has been an amazing experience and I appreciate that UoH offers it for free. Thank you! I am looking forward to learning about GraphQL and Typescript in the last 2 sections, as both will be entirely new to me. 
 - Part 8 GraphQL
   - a GraphQL-server
   - b React and GraphQL
