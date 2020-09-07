@@ -12,10 +12,12 @@ import { initBlogs } from "./reducers/blogReducer";
 import { initUsers } from "./reducers/usersReducer";
 import { setUserByLocalStorage } from "./reducers/loginReducer";
 import "./App.css";
+import { Container } from "@material-ui/core";
 
 const App = () => {
   const user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs);
+  const usersList = useSelector((state) => state.usersList);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,14 +27,14 @@ const App = () => {
   }, [dispatch, blogs.length]);
 
   return (
-    <div>
-      <h1>Blog List App</h1>
+    <Container maxWidth="md">
+      <h1>[ [ Blog Links Lister ] ]</h1>
       <MessageBlock />
       {!user.token ? (
         <LoginForm />
       ) : (
         <Fragment>
-          <Navigation user={user} />
+          <Navigation user={user} usersList={usersList} />
           <Switch>
             <Route exact path="/users" component={UsersList} />
             <Route exact path="/user/:id" component={UserStats} />
@@ -42,7 +44,7 @@ const App = () => {
           </Switch>
         </Fragment>
       )}
-    </div>
+    </Container>
   );
 };
 

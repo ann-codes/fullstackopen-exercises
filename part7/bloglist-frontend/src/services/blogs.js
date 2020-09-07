@@ -27,8 +27,13 @@ const deleteBlog = async (id, token) => {
 };
 
 const findById = async (id) => {
-  const res = await axios.get(`${baseUrl}/${id}`);
-  return res.data;
+  try {
+    const res = await axios.get(`${baseUrl}/${id}`);
+    return res.data;
+  } catch (ex) {
+    console.error("BLOG NOT FOUND: ", ex);
+    return 0;
+  }
 };
 
 export default { setToken, getAll, create, update, deleteBlog, findById };

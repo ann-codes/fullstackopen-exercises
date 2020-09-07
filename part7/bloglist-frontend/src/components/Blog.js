@@ -7,6 +7,9 @@ import Likes from "./Likes";
 import { setMsgBlock, BLUE_MSG, RED_MSG } from "../reducers/msgBlockReducer";
 import { updateBlog, deleteBlog } from "../reducers/blogReducer";
 
+import { TableCell, TableRow, makeStyles, Button } from "@material-ui/core";
+import { Delete } from "@material-ui/icons";
+
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch();
 
@@ -43,31 +46,55 @@ const Blog = ({ blog, user }) => {
     }
   };
 
+  const useStyles = makeStyles({
+    td: {
+      verticalAlign: "top",
+    },
+  });
+
+  const classes = useStyles();
+
   return (
-    <div className="blog-box" style={{ display: notDeleted ? "" : "none" }}>
-      <span className="bold-med">
+    <TableRow hover={true} style={{ display: notDeleted ? "" : "none" }}>
+      <TableCell>
         <Link to={`/blog/${blog.id}`}>
           {blog.title} by {blog.author}
         </Link>{" "}
-      </span>
-      <button onClick={() => setVis(!vis)}>
-        {vis ? "hide" : "quick view"}
-      </button>
-      <div className="blog-deets" style={{ display: vis ? "block" : "none" }}>
-        <ul>
-          <li>
-            <a href={blog.url} target="_blank" rel="noopener noreferrer">
-              {blog.url}
-            </a>
-          </li>
-          <Likes likes={likes} addLike={addLike} />
-          <li>Posted by {blog.user.name}</li>
-        </ul>
-        {blog.user.username === user.username && (
-          <button onClick={() => deleteBlogConfirm()}>Delete</button>
-        )}
-      </div>
-    </div>
+        <span
+          className="blog-deets"
+          style={{ display: vis ? "block" : "none" }}
+        >
+          <ul>
+            <li>
+              <a href={blog.url} target="_blank" rel="noopener noreferrer">
+                {blog.url}
+              </a>
+            </li>
+            <li>Posted by {blog.user.name}</li>
+            <Likes likes={likes} addLike={addLike} />
+          </ul>
+          {blog.user.username === user.username && (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<Delete />}
+              onClick={() => deleteBlogConfirm()}
+            >
+              Delete Link
+            </Button>
+          )}
+        </span>
+      </TableCell>
+      <TableCell align="right" className={classes.td}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setVis(!vis)}
+        >
+          {vis ? "hide" : "quick view"}
+        </Button>
+      </TableCell>
+    </TableRow>
   );
 };
 

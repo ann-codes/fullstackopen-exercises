@@ -9,8 +9,13 @@ const findByUsername = async (findUsername) => {
 };
 
 const findById = async (id) => {
-  const res = await axios.get(`${baseUrl}/${id}`);
-  return res.data;
+  try {
+    const res = await axios.get(`${baseUrl}/${id}`);
+    return res.data;
+  } catch (ex) {
+    console.error("USER NOT FOUND: ", ex);
+    return 0;
+  }
 };
 
 export default { getAllUsers, findByUsername, findById };
