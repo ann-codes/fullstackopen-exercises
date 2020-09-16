@@ -32,11 +32,6 @@ let authors = [
   },
 ];
 
-/*
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- */
-
 let books = [
   {
     title: "Clean Code",
@@ -106,8 +101,8 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allAuthors: [Author]
-    allBooks(author: String, genre: String): [Book]
+    allAuthors: [Author!]!
+    allBooks(author: String, genre: String): [Book!]!
   }
   type Mutation {
     addBook(
