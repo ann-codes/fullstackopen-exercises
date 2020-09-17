@@ -1,10 +1,26 @@
-const {
-  ApolloServer,
-  gql,
-  attachConnectorsToContext,
-} = require("apollo-server");
-
+const { ApolloServer, UserInputError, gql } = require("apollo-server");
+const mongoose = require("mongoose");
+const Book = require("./models/book");
+const Author = require("./models/author");
 const uuid = require("uuid/v1");
+
+mongoose.set("useFindAndModify", false);
+mongoose.set("useUnifiedTopology", true); // depreciation warnings
+mongoose.set("useCreateIndex", true); // depreciation warnings
+
+const MONGODB_URI =
+  "mongodb+srv://annfso:annfso@qluster4.bzuvg.mongodb.net/graphql-library?retryWrites=true&w=majority";
+
+console.log(`[ Connecting to" ${MONGODB_URI} ]`);
+
+mongoose
+  .connect(MONGODB_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log("[ Connected to MongoDB ]");
+  })
+  .catch((error) => {
+    console.log("==> Error connection to MongoDB:", error.message);
+  });
 
 let authors = [
   {
@@ -89,8 +105,8 @@ const typeDefs = gql`
     title: String!
     published: Int!
     author: String!
-    id: ID!
     genres: [String!]!
+    id: ID!
   }
   type Author {
     name: String!
@@ -187,5 +203,5 @@ const resolvers = {
 const server = new ApolloServer({ typeDefs, resolvers });
 
 server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+  console.log(`[ Server ready at ${url} ]`);
 });
