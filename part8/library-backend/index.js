@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Book = require("./models/book");
 const Author = require("./models/author");
 const uuid = require("uuid/v1");
+const book = require("./models/book");
 
 mongoose.set("useFindAndModify", false);
 mongoose.set("useUnifiedTopology", true); // depreciation warnings
@@ -58,29 +59,31 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allAuthors: (root, args) => {
-      return Author.find({});
-    },
+    allAuthors: async () => await Author.find({}),
     allBooks: async (root, args) => {
-      const books = await Book.find({});
-
       if (args.author && args.genre) {
-        const filterByAuth = books.filter((a) => a.author === args.author);
-        return filterByAuth.filter((g) => g.genres.includes(args.genre));
-      } else if (args.author) {
-        return books.filter((a) => a.author === args.author);
-      } else if (args.genre) {
-        return books.filter((g) => g.genres.includes(args.genre));
-      } else {
+        const author = await Author.findOne({ name: args.author });
+        const books = await Book.find({
+          author: author,
+          genres: { $all: args.genre },
+        });
         return books;
+      } else if (args.author) {
+        const author = await Author.findOne({ name: args.author });
+        const books = await Book.find({ author: author });
+        return books;
+      } else if (args.genre) {
+        const books = await Book.find({ genres: { $in: args.genre } });
+        return books;
+      } else {
+        throw new UserInputError("ERROR: Something went wrong?", {
+          invalidArgs: args,
+        });
       }
-
-      // return Book.find({});
     },
   },
   Author: {
     bookCount: async (root) => {
-      // getting count via actual count
       const count = await Book.find({ author: root._id }).countDocuments();
       return count;
     },
@@ -147,7 +150,6 @@ const resolvers = {
       return book;
     },
     editAuthor: async (root, args) => {
-      // find author
       const foundAuthor = await Author.findOne({ name: args.name });
       if (!foundAuthor) {
         throw new UserInputError("Author not found!", {
