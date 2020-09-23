@@ -1,21 +1,17 @@
 const { ApolloServer, UserInputError, gql } = require("apollo-server");
 const mongoose = require("mongoose");
+const config = require("./config");
 const Book = require("./models/book");
 const Author = require("./models/author");
-const uuid = require("uuid/v1");
-const book = require("./models/book");
 
 mongoose.set("useFindAndModify", false);
 mongoose.set("useUnifiedTopology", true); // depreciation warnings
 mongoose.set("useCreateIndex", true); // depreciation warnings
 
-const MONGODB_URI =
-  "mongodb+srv://annfso:annfso@qluster4.bzuvg.mongodb.net/graphql-library?retryWrites=true&w=majority";
-
-console.log(`[ Connecting to ${MONGODB_URI} ]`);
+console.log(`[ Connecting to ${config.MONGODB_URI} ]`);
 
 mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true })
+  .connect(config.MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
     console.log("[ Connected to MongoDB ]");
   })
@@ -24,6 +20,14 @@ mongoose
   });
 
 const typeDefs = gql`
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+  type Token {
+    value: String!
+  }
   type Author {
     name: String!
     id: String!
@@ -38,6 +42,7 @@ const typeDefs = gql`
     id: ID!
   }
   type Query {
+    me: User
     bookCount: Int!
     authorCount: Int!
     allAuthors: [Author!]!
@@ -52,6 +57,8 @@ const typeDefs = gql`
     ): Book
     addAuthor(name: String!): Author
     editAuthor(name: String!, setBornTo: Int!): Author
+    createUser(username: String!, favoriteGenre: String!): User
+    login(username: String!, password: String!): Token
   }
 `;
 
@@ -60,25 +67,27 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allAuthors: async () => await Author.find({}),
-    allBooks: async (root, args) => {
-      if (args.author && args.genre) {
-        const author = await Author.findOne({ name: args.author });
+    allBooks: async (root, { author, genre }) => {
+      if (author && genre) {
+        const findAuthor = await Author.findOne({ name: author });
         const books = await Book.find({
-          author: author,
-          genres: { $all: args.genre },
+          author: findAuthor,
+          genres: { $all: genre },
         });
         return books;
-      } else if (args.author) {
-        const author = await Author.findOne({ name: args.author });
-        const books = await Book.find({ author: author });
+      } else if (author) {
+        const findAuthor = await Author.findOne({ name: author });
+        const books = await Book.find({ author: findAuthor }).populate(
+          "author"
+        );
         return books;
-      } else if (args.genre) {
-        const books = await Book.find({ genres: { $in: args.genre } });
+      } else if (genre) {
+        const books = await Book.find({ genres: { $in: genre } }).populate(
+          "author"
+        );
         return books;
       } else {
-        throw new UserInputError("ERROR: Something went wrong?", {
-          invalidArgs: args,
-        });
+        return await Book.find({}).populate("author").exec();
       }
     },
   },
@@ -88,12 +97,18 @@ const resolvers = {
       return count;
     },
   },
+  // including this produced error in nested relationship w/ query,
+  // bc of inclusion of ID in Author?
   Book: {
-    author: (root) => {
-      return {
-        name: root.name,
-      };
-    },
+    // author: (root) => {
+    //   return {
+    //     // name: root.name,
+    //     // born: root.name,
+    //     // bookCount: root.bookCount,
+    //     // id: root.id,
+    //     // // ...root // <= doesn't work
+    //   };
+    // },
   },
   Mutation: {
     addAuthor: async (root, args) => {
