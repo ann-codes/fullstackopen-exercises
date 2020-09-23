@@ -10,7 +10,6 @@ const schema = new mongoose.Schema({
   favoriteGenre: {
     type: String,
   },
-  password: "meow",
 });
 
 module.exports = mongoose.model("User", schema);
