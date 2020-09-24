@@ -20,7 +20,12 @@ const NewBook = (props) => {
     event.preventDefault();
 
     addBook({
-      variables: { title, published: parseInt(published), author, genres },
+      variables: {
+        title: title.length > 0 ? title : null,
+        published: published.length > 0 ? parseInt(published) : null,
+        author: author.length > 0 ? author : null,
+        genres: genres.length > 0 ? genres : null,
+      },
     });
 
     setTitle("");
