@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { ALL_BOOKS } from "../queries";
+import GenreButtons from "./GenreButtons";
 
 const Books = (props) => {
   const [books, setBooks] = useState([]);
+  const [filterBy, setFilterBy] = useState(null);
   const result = useQuery(ALL_BOOKS);
 
   useEffect(() => {
     if (result.data) {
-      setBooks(result.data.allBooks);
+      const genreLowercase = result.data.allBooks.map((b) => {
+        return { ...b, genres: b.genres.map((g) => g.toLowerCase()) };
+      });
+      setBooks(genreLowercase);
     }
   }, [result.data]);
 
@@ -20,12 +25,21 @@ const Books = (props) => {
     return <div>loading...</div>;
   }
 
-console.log(result.data.allBooks);
+  const filteredBooks = filterBy
+    ? books.filter((b) => b.genres.includes(filterBy))
+    : books;
+
+  const mappedBooks = filteredBooks.map((a) => (
+    <tr key={a.title}>
+      <td>{a.title}</td>
+      <td>{a.author.name}</td>
+      <td>{a.published}</td>
+    </tr>
+  ));
 
   return (
     <div>
-      <h2>books</h2>
-
+      <h2>Books</h2>
       <table>
         <tbody>
           <tr>
@@ -33,15 +47,11 @@ console.log(result.data.allBooks);
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
+          {mappedBooks}
         </tbody>
       </table>
+      <GenreButtons books={books} setFilterBy={setFilterBy} />
+      <button onClick={() => setFilterBy(null)}>all genres</button>
     </div>
   );
 };
