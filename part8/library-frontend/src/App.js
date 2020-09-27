@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useApolloClient } from "@apollo/client";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
-import Notify from "./components/Notify";
 import LoginForm from "./components/LoginForm";
+import Recommended from "./components/Recommended";
 
 const App = () => {
+  const client = useApolloClient();
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [notify, setNotify] = useState(null);
-  const client = useApolloClient();
+  // const [notify, setNotify] = useState(null);
+  // const [errorMessage, setErrorMessage] = useState(null);
 
   // const login = (
   //   <div>
@@ -41,14 +41,23 @@ const App = () => {
         <button onClick={() => setPage("books")}>books</button>
         {token && <button onClick={() => setPage("add")}>add book</button>}
         {token ? (
-          <button
-            onClick={() => {
-              handleLogout();
-              setPage("authors");
-            }}
-          >
-            logout
-          </button>
+          <Fragment>
+            <button
+              onClick={() => {
+                setPage("recommended");
+              }}
+            >
+              recommended
+            </button>
+            <button
+              onClick={() => {
+                handleLogout();
+                setPage("authors");
+              }}
+            >
+              logout
+            </button>
+          </Fragment>
         ) : (
           <button onClick={() => setPage("login")}>login</button>
         )}
@@ -56,12 +65,8 @@ const App = () => {
       <Authors show={page === "authors"} />
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
-
-      <LoginForm
-        setToken={setToken}
-        setError={notify}
-        show={page === "login"}
-      />
+      <Recommended show={page === "recommended"} token={token} />
+      <LoginForm setToken={setToken} show={page === "login"} />
     </div>
   );
 };
