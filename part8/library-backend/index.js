@@ -120,7 +120,10 @@ const resolvers = {
   },
   Mutation: {
     createUser: (root, args) => {
-      const user = new User({ username: args.username });
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre.toLowerCase(),
+      });
       return user.save().catch((error) => {
         throw new UserInputError(error.message, {
           invalidArgs: args,
@@ -144,7 +147,6 @@ const resolvers = {
         born: null,
         bookCount: 1,
       });
-
       try {
         await author.save();
       } catch (e) {
