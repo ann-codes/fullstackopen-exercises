@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from "../queries";
 
-const NewBook = ({ show }) => {
+const NewBook = ({ show, updateCacheWith }) => {
   const [title, setTitle] = useState("");
   const [author, setAuhtor] = useState("");
   const [published, setPublished] = useState("");
@@ -10,21 +10,22 @@ const NewBook = ({ show }) => {
   const [genres, setGenres] = useState([]);
 
   const [addBook] = useMutation(ADD_BOOK, {
-    // use this instead of custom update below to fetch 2 queries
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    // keeping refetchQ to refetch author data, use custom for books
+    refetchQueries: [{ query: ALL_AUTHORS }],
     onError: (error) => {
       console.log(error);
     },
-    // update: (store, response) => {
-    //   const dataInStore = store.readQuery({ query: ALL_BOOKS });
-    //   store.writeQuery({
-    //     query: ALL_BOOKS,
-    //     data: {
-    //       ...dataInStore,
-    //       allBooks: [...dataInStore.allBooks, response.data.addBook],
-    //     },
-    //   });
-    // },
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
+      // const dataInStore = store.readQuery({ query: ALL_BOOKS });
+      // store.writeQuery({
+      //   query: ALL_BOOKS,
+      //   data: {
+      //     ...dataInStore,
+      //     allBooks: [...dataInStore.allBooks, response.data.addBook],
+      //   },
+      // });
+    },
   });
 
   const submit = async (event) => {

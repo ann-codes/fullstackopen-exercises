@@ -62,7 +62,10 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - c Database and user administration
   - d Login and updating the cache
   - e Fragments and subscriptions
-- Part 9 Typescript
+  - Notes: 
+    - Left lots of WIP comments in for reference. 
+    - Unclear how to test 8.26 (n+1 problem) to see if solved or not.
+- [Part 9 Typescript](/part9/)
   - a Background and introduction
   - b First steps with Typescript
   - c Typing the express app
