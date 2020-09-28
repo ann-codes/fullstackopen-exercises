@@ -65,6 +65,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - Notes: 
     - Left lots of WIP comments in for reference. 
     - Unclear how to test 8.26 (n+1 problem) to see if solved or not.
+    - NTS: refer to the [course solutions](https://studies.cs.helsinki.fi/stats/courses/fullstackopen/solutions/8) for more reference. 
 - [Part 9 Typescript](/part9/)
   - a Background and introduction
   - b First steps with Typescript
