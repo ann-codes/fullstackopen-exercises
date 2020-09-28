@@ -10,6 +10,8 @@ const Book = require("./models/book");
 const Author = require("./models/author");
 const User = require("./models/user");
 const jwt = require("jsonwebtoken");
+const { PubSub } = require("apollo-server");
+const pubsub = new PubSub();
 
 mongoose.set("useFindAndModify", false);
 mongoose.set("useUnifiedTopology", true); // depreciation warnings
@@ -67,14 +69,18 @@ const typeDefs = gql`
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
   }
+  type Subscription {
+    bookAdded: Book!
+  }
 `;
 
+// 8.26 n+1 problem, not sure how to test?
 const resolvers = {
   Query: {
     me: (root, args, context) => context.currentUser,
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allAuthors: async () => await Author.find({}),
+    allAuthors: async (root, args, context, info) => await Author.find({}),
     allBooks: async (root, { author, genre }) => {
       if (author && genre) {
         const findAuthor = await Author.findOne({ name: author });
@@ -157,6 +163,35 @@ const resolvers = {
       }
       return author;
     },
+    editAuthor: async (root, args, context) => {
+      const foundAuthor = await Author.findOne({ name: args.name });
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        console.log("NOT AUTHENTICATED");
+
+        // inclusion of below will have app-breaking Unhandled Rejection (Error)
+        // whereas no issues w/ same code in addBook? same using UserInputError
+        // also tried putting throw AuthError into a try/catch LOL
+
+        throw new AuthenticationError("User not authenticated!");
+      }
+      if (!foundAuthor) {
+        throw new UserInputError("Author not found!", {
+          invalidArgs: args,
+        });
+      } else {
+        foundAuthor.born = args.setBornTo;
+        try {
+          await foundAuthor.save();
+        } catch (e) {
+          console.log("ERROR:", e.message);
+          throw new UserInputError(e.message, {
+            invalidArgs: args,
+          });
+        }
+      }
+      return foundAuthor;
+    },
     addBook: async (root, args, context) => {
       // check if author exists
       const foundAuthor = await Author.findOne({ name: args.author });
@@ -195,37 +230,23 @@ const resolvers = {
 
       // add the book to books list
       const book = new Book({ ...args, author: author });
-      await book.save();
-      return book;
-    },
-    editAuthor: async (root, args, context) => {
-      const foundAuthor = await Author.findOne({ name: args.name });
-      const currentUser = context.currentUser;
-      if (!currentUser) {
-        console.log("NOT AUTHENTICATED");
-
-        // inclusion of below will have app-breaking Unhandled Rejection (Error)
-        // whereas no issues w/ same code in addBook? same using UserInputError
-        // also tried putting throw AuthError into a try/catch LOL
-
-        throw new AuthenticationError("User not authenticated!");
-      }
-      if (!foundAuthor) {
-        throw new UserInputError("Author not found!", {
+      try {
+        await book.save();
+      } catch (e) {
+        console.log("ERROR:", e.message);
+        throw new UserInputError(e.message, {
           invalidArgs: args,
         });
-      } else {
-        foundAuthor.born = args.setBornTo;
-        try {
-          await foundAuthor.save();
-        } catch (e) {
-          console.log("ERROR:", e.message);
-          throw new UserInputError(e.message, {
-            invalidArgs: args,
-          });
-        }
       }
-      return foundAuthor;
+
+      pubsub.publish("BOOK_ADDED", { bookAdded: book });
+
+      return book;
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
     },
   },
 };
@@ -243,6 +264,7 @@ const server = new ApolloServer({
   },
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`[ Server ready at ${url} ]`);
+  console.log(`[ Subscriptions ready at ${subscriptionsUrl} ]`);
 });
