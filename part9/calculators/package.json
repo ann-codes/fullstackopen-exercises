@@ -1,0 +1,21 @@
+{
+  "name": "calculators",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bmi": "ts-node bmi.ts",
+    "calculate": "ts-node bmi.ts",
+    "multuply": "ts-node calculator.ts",
+    "ts-node": "ts-node"
+  },
+  "author": "Ann",
+  "license": "ISC",
+  "dependencies": {
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^14.11.2"
+  }
+}
