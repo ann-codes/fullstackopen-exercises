@@ -36,8 +36,8 @@ const calculateBmi = (heightInCm: number, weightInKg: number): string => {
 };
 
 // assignment really SHOULD specify that it is height THEN weight as params!
-const heightInCm: number = Number(process.argv[2]);
-const weightInKg: number = Number(process.argv[3]);
+// const heightInCm: number = Number(process.argv[2]);
+// const weightInKg: number = Number(process.argv[3]);
 
 try {
   const { heightInCm, weightInKg } = parseArgs(process.argv);
