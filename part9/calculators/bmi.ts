@@ -18,6 +18,9 @@ const parseArgs = (args: Array<string>): bmiValues => {
 };
 
 const calculateBmi = (heightInCm: number, weightInKg: number): string => {
+  if (heightInCm <= 0) {
+    return "Height must be greater than zero!";
+  }
   let heightInM = heightInCm * 0.01; // convert centermeter to meter!
   let bmi = weightInKg / (heightInM * heightInM);
   //   console.log(bmi);
