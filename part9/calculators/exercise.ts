@@ -1,13 +1,44 @@
-const calculateExercises = (data: Array<number>, target: number): Object => {
+interface output {
+  periodLength: number;
+  trainingDays: number;
+  success: boolean;
+  rating: number;
+  ratingDescription: string;
+  target: number;
+  average: number;
+}
+
+interface exerciseInput {
+  data: Array<number>;
+  target: number;
+}
+
+const parseArgsEx = (args: Array<string>): exerciseInput => {
+  if (args.length < 4) throw new Error("Not enough arguments!");
+
+  const makeArray = args.slice(2);
+  const numbersOnly = makeArray.filter((e) => !isNaN(Number(e)));
+
+  if (makeArray.length === numbersOnly.length) {
+    return {
+      data: makeArray.slice(0, makeArray.length - 1).map((n) => Number(n)),
+      target: Number(makeArray.slice(-1)),
+    };
+  } else {
+    throw new Error("All input values must be numbers!");
+  }
+};
+
+const calculateExercises = (data: Array<number>, target: number): output => {
   const average = data.reduce((a, b) => a + b, 0) / data.length;
   const targetReached = target >= average;
   let rating = -1;
   let description = "";
 
-  if (average / target > 1.25) {
+  if (average / target > 1.2) {
     rating = 3;
     description = "Amazing job!";
-  } else if (average / target < 0.75) {
+  } else if (average / target < 0.8) {
     rating = 1;
     description = "You really dropped the ball here!";
   } else {
@@ -26,4 +57,13 @@ const calculateExercises = (data: Array<number>, target: number): Object => {
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { data, target } = parseArgsEx(process.argv);
+  console.log("DATA", data, "TARGET", target);
+  console.log(calculateExercises(data, target));
+} catch (e) {
+  console.log("Error", e.message);
+}
+
+// console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+console.log("=======");
