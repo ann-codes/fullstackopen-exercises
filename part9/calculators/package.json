@@ -6,6 +6,7 @@
   "scripts": {
     "bmi": "ts-node bmi.ts",
     "calculate": "ts-node bmi.ts",
+    "exer": "ts-node exercise.ts",
     "multuply": "ts-node calculator.ts",
     "ts-node": "ts-node"
   },
