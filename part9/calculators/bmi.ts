@@ -21,8 +21,8 @@ const calculateBmi = (heightInCm: number, weightInKg: number): string => {
   if (heightInCm <= 0) {
     return "Height must be greater than zero!";
   }
-  let heightInM = heightInCm * 0.01; // convert centermeter to meter!
-  let bmi = weightInKg / (heightInM * heightInM);
+  const heightInM = heightInCm * 0.01; // convert centermeter to meter!
+  const bmi = weightInKg / (heightInM * heightInM);
   //   console.log(bmi);
   if (bmi < 18.5) {
     return "Underweight";
@@ -43,6 +43,7 @@ try {
   const { heightInCm, weightInKg } = parseArgs(process.argv);
   console.log(calculateBmi(heightInCm, weightInKg));
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log("Error", e.message);
 }
 
