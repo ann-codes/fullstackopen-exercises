@@ -62,8 +62,11 @@ try {
   console.log("DATA", data, "TARGET", target);
   console.log(calculateExercises(data, target));
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log("Error", e.message);
 }
 
 // console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
 console.log("=======");
+
+export default calculateExercises;

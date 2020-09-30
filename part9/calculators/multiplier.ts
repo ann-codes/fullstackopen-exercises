@@ -27,7 +27,9 @@ const multiplicator = (a: number, b: number, printText: string) => {
 };
 
 // take arguments on CLI w/ node argv
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
 const a: number = Number(process.argv[2]);
+// eslint-disable-next-line @typescript-eslint/no-inferrable-types
 const b: number = Number(process.argv[3]);
 multiplicator(a, b, `Multiplied ${a} and ${b}, the result is:`);
 // in CLI: yarn run mult 6 8 | npm run multiply 5 2
@@ -41,5 +43,6 @@ try {
     `Multiplied ${value1} and ${value2}, the result is:`
   );
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log("Error: ", e.message);
 }

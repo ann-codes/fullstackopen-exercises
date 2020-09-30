@@ -18,7 +18,7 @@ const calculatorBad = (a: number, b: number, op: Operation): Result => {
 calculatorBad(10, 2, "add");
 
 // better so you can throw error
-const calculator = (a: number, b: number, op: Operation): number => {
+export const calculator = (a: number, b: number, op: Operation): number => {
   switch (op) {
     case "multiply":
       return a * b;
@@ -35,5 +35,6 @@ const calculator = (a: number, b: number, op: Operation): number => {
 try {
   console.log("Calculate:", calculator(1, 5, "divide"));
 } catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   console.log("Something went wrong, error message: ", e.message);
 }
