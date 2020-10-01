@@ -25,13 +25,21 @@ const parseArgsEx = (args: Array<string>): exerciseInput => {
       target: Number(makeArray.slice(-1)),
     };
   } else {
-    throw new Error("All input values must be numbers!");
+    throw new Error("All input values must be numbers!!");
   }
 };
 
 const calculateExercises = (data: Array<number>, target: number): output => {
+  const checkData = data.filter((d) => !isNaN(d));
+
+  if (checkData.length !== data.length || isNaN(target)) {
+    throw new Error(
+      "malformatted parameters: all input values must be numbers"
+    );
+  }
+
   const average = data.reduce((a, b) => a + b, 0) / data.length;
-  const targetReached = target >= average;
+  const targetReached = average >= target;
   let rating = -1;
   let description = "";
 
