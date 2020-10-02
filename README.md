@@ -69,4 +69,5 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - a Background and introduction
   - b First steps with Typescript
   - c Typing the express app
+    - Note: running `tsc` will build the project
   - d React with types
