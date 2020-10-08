@@ -1,9 +1,5 @@
 import React from "react";
-
-interface CoursePart {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from "../types";
 
 const Total: React.FC<{ courseParts: CoursePart[] }> = ({ courseParts }) => {
   const totalExercise = courseParts.reduce(
@@ -11,7 +7,7 @@ const Total: React.FC<{ courseParts: CoursePart[] }> = ({ courseParts }) => {
     0
   );
 
-  return <p>Number of exercises: {totalExercise}</p>;
+  return <strong>Number of exercises: {totalExercise}</strong>;
 };
 
 export default Total;

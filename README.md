@@ -1,5 +1,8 @@
 # FullStackOpen 2020
 
+![Ann Nguyen's FSO certificate](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/262ba8424fe26655f03598d5d1ea851c)
+[Link](https://studies.cs.helsinki.fi/stats/api/certificate/fullstackopen/en/262ba8424fe26655f03598d5d1ea851c)
+
 This is a repo of my exercise solutions following the University of Helsinki [Full Stack Open 2020](https://fullstackopen.com/en) course. 
 
 Note: Some folders will require deleting the yarn.lock file in order to install node_modules and run server (later added to .gitignore).
@@ -71,3 +74,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - c Typing the express app
     - Note: running `tsc` will build the project
   - d React with types
+- Part 10 React Native 
+  - https://fullstackopen.com/en/part10
+  - Notes: This was recently released on Sept 1, 2020 after I started working on FSO in late July. I will likely delay working on this Part until much later as I do not quite want to get into mobile dev at this time. 
+
