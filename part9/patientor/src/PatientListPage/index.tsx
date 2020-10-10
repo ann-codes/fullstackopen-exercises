@@ -9,6 +9,7 @@ import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue } from "../state";
 
+// https://fullstackopen.com/en/part9/react_with_types#patient-listing-page
 const PatientListPage: React.FC = () => {
   const [{ patients }, dispatch] = useStateValue();
 
