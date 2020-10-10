@@ -8,6 +8,10 @@ patientRouter.get("/", (_req, res) => {
   res.send(patientSvs.getPatients());
 });
 
+patientRouter.get("/:id", (req, res) => {
+  res.send(patientSvs.getPatientById(req.params.id));
+});
+
 patientRouter.post("/", (req, res) => {
   try {
     const newPatient = toNewPatient(req.body);
