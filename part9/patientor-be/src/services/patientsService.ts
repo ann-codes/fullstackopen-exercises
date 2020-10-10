@@ -1,6 +1,8 @@
+// /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { v4 as uuid } from "uuid";
-import patients from "../../data/patients.json";
-import { Patient, NewPatient } from "../types";
+import patients from "../data/patients";
+import { NewPatient, Patient, PublicPatient } from "../types";
 
 // const findPatientById = (id: string): NewPatient | string => {
 //   const foundPatient = patients.find((p) => p.id === id);
@@ -11,8 +13,17 @@ import { Patient, NewPatient } from "../types";
 //   }
 // };
 
-const getPatients = (): Patient[] => {
-  return patients;
+const getPatients = (): PublicPatient[] => {
+  return patients.map(
+    ({ id, name, occupation, gender, dateOfBirth, entries }) => ({
+      id,
+      name,
+      occupation,
+      gender,
+      dateOfBirth,
+      entries,
+    })
+  );
 };
 
 const addPatient = (patient: NewPatient): Patient => {

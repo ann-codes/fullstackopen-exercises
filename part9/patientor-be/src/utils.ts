@@ -35,6 +35,7 @@ const toNewPatient = (object: any): NewPatient => {
     ssn: parseStringType(object.ssn, "ssn"),
     gender: parseGender(object.gender),
     occupation: parseStringType(object.occupation, "occupation"),
+    entries: []
   };
 };
 
