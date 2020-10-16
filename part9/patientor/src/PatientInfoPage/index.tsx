@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { Fragment } from "react";
+import React from "react";
 import axios from "axios";
-
-import { Header, Icon, Card } from "semantic-ui-react";
-import { useStateValue } from "../state";
 
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { Patient, Diagnosis } from "../types";
+
+import PatientInfo from "./PatientInfo";
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,61 +39,12 @@ const PatientInfoPage: React.FC = () => {
     getDiagnosesCode();
   }, []);
 
-  const getDiagnosisDescription = (code: string): string => {
-    if (diagnosesCodes) {
-      const found = diagnosesCodes?.find((c) => c.code === code);
-      if (found?.name) {
-        return found.name;
-      }
-    }
-    return "not found";
-  };
-
-  const mapEntries = patient?.entries?.map((e) => (
-    <Card
-      fluid
-      key={e.id}
-      color="blue"
-      header={e.date}
-      meta={e.description}
-      description={
-        <ul>
-          {e.diagnosisCodes?.map((c) => (
-            <li key={c}>
-              {c} - {getDiagnosisDescription(c)}
-            </li>
-          ))}
-        </ul>
-      }
-    />
-  ));
-
-  const gender =
-    patient?.gender === "female" ? (
-      <Icon name="venus" />
-    ) : patient?.gender === "male" ? (
-      <Icon name="mars" />
-    ) : (
-      <Icon name="genderless" />
-    );
-
   return (
-    <Fragment>
-      <Header as="h2">
-        {patient?.name}
-        {gender}
-      </Header>
-      <p>
-        <strong>SSN: </strong>
-        {patient?.ssn}
-      </p>
-      <p>
-        <strong>Occupation: </strong>
-        {patient?.occupation}
-      </p>
-      <Header as="h3">Entries</Header>
-      <div>{mapEntries}</div>
-    </Fragment>
+    <div>
+      {patient && diagnosesCodes && (
+        <PatientInfo patient={patient} diagnosesCodes={diagnosesCodes} />
+      )}
+    </div>
   );
 };
 
