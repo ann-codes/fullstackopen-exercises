@@ -1,14 +1,14 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import { HospitalEntry } from "../types";
 
 const EntryHospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
-  console.log(entry);
+  const discharge = entry?.discharge;
 
   return (
-    <Fragment>
-      <p>EntryHospital</p>
-    </Fragment>
+    <p>
+      Discharge Date: {discharge.date} - {discharge.criteria}
+    </p>
   );
 };
 

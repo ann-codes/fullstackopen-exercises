@@ -1,13 +1,20 @@
 import React, { Fragment } from "react";
 
-import { HospitalEntry } from "../types";
+import { OccupationalHealthcareEntry } from "../types";
 
-const EntryOccHealth: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
-  console.log(entry);
+const EntryOccHealth: React.FC<{ entry: OccupationalHealthcareEntry }> = ({
+  entry,
+}) => {
+  const sickLeaveInfo = entry.sickLeave && (
+    <p>
+      Leave dates: {entry.sickLeave.startDate} to {entry.sickLeave.endDate}
+    </p>
+  );
 
   return (
     <Fragment>
-      <p>EntryOccHealth</p>
+      <p>Employer: {entry.employerName}</p>
+      {sickLeaveInfo}
     </Fragment>
   );
 };

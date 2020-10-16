@@ -21,7 +21,7 @@ const PatientInfoPage: React.FC = () => {
         );
         setPatient(patientInfo.data);
       } catch (e) {
-        console.error(e.response.data);
+        console.error("ERROR =====>", e.response.data);
       }
     };
     fetchPatientById();

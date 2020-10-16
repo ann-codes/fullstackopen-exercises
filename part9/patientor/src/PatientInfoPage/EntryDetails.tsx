@@ -7,16 +7,16 @@ import EntryHealthCheck from "./EntryHealthCheck";
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   const assertNever = (error: never): never => {
-    throw new Error("Unexpected object: " + error);
+    throw new Error(`Unexpected object: ${error}`);
   };
 
   switch (entry.type) {
     case "Hospital":
-      return <EntryHospital entry={entry} />;
+      return <EntryHospital key={entry.id} entry={entry} />;
     case "OccupationalHealthcare":
-      return <EntryHealthCheck entry={entry} />;
+      return <EntryOccHealth key={entry.id} entry={entry} />;
     case "HealthCheck":
-      return <EntryOccHealth entry={entry} />;
+      return <EntryHealthCheck key={entry.id} entry={entry} />;
     default:
       return assertNever(entry);
   }

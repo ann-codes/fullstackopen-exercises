@@ -8,8 +8,6 @@ const PatientInfo: React.FC<{
   patient: Patient;
   diagnosesCodes: Diagnosis[];
 }> = ({ patient, diagnosesCodes }) => {
-  console.log(patient);
-
   const getDiagnosisDescription = (code: string): string => {
     if (diagnosesCodes) {
       const found = diagnosesCodes?.find((c) => c.code === code);
