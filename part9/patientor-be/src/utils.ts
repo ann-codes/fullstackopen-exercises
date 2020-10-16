@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/restrict-template-expressions*/
@@ -23,20 +22,21 @@ const isGender = (param: any): param is Gender => {
 
 const parseGender = (gender: any): Gender => {
   if (!gender || !isGender(gender)) {
-    throw new Error("Incorrect or missing gender: " + gender);
+    throw new Error(`Incorrect or missing gender: ${gender}`);
   }
   return gender;
 };
 
 const toNewPatient = (object: any): NewPatient => {
-  return {
+  const newPatient = {
     name: parseStringType(object.name, "name"),
     dateOfBirth: parseStringType(object.dateOfBirth, "DOB"),
     ssn: parseStringType(object.ssn, "ssn"),
     gender: parseGender(object.gender),
     occupation: parseStringType(object.occupation, "occupation"),
-    entries: []
+    entries: [],
   };
+  return newPatient;
 };
 
 export default toNewPatient;
