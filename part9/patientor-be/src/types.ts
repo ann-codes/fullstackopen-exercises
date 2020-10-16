@@ -11,16 +11,6 @@ export enum Gender {
   Other = "other",
 }
 
-// export interface Patient {
-//   id: string;
-//   name: string;
-//   ssn: string;
-//   occupation: string;
-//   gender: Gender;
-//   dateOfBirth: string;
-//   entries: Entry[];
-// }
-
 export interface Patient {
   id: string;
   name: string;
