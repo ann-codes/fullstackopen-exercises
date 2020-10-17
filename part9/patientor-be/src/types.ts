@@ -25,10 +25,8 @@ export type NewPatient = Omit<Patient, "id">;
 
 export type PublicPatient = Omit<Patient, "ssn" | "entries">;
 
-// export type NoSensitiveDiaryEntry = Omit<Patient, "ssn">;
-
 /// Entry Types
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
@@ -69,3 +67,5 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+export type NewEntry = Omit<Entry, "id">;

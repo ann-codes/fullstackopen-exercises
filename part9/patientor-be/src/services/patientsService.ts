@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import patients from "../data/patients";
-import { NewPatient, Patient, PublicPatient } from "../types";
+import { NewPatient, Patient, PublicPatient, Entry } from "../types";
 
 const getPatientById = (id: string): Patient | string => {
   const foundPatient = patients.find((p) => p.id === id);
@@ -30,8 +30,30 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (entry: Entry, patientId: string): Entry | void => {
+  // trying to error handle, WIP
+  const foundPatient = getPatientById(patientId);
+  if (typeof foundPatient === "object") {
+    try {
+      //===
+      const newEntry = { ...entry, id: uuid() };
+      patients.map((patient) => {
+        if (patient.id === patientId) {
+          patient.entries.push(newEntry);
+        }
+        return patient;
+      });
+      return newEntry;
+      //===
+    } catch (e) {
+      throw new Error("SEOMTHEING WENT WRONG");
+    }
+  }
+};
+
 export default {
   getPatientById,
   getPatients,
   addPatient,
+  addEntry,
 };
