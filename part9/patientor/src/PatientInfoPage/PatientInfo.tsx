@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 
 import { Patient, Diagnosis } from "../types";
 import { Header, Card, Icon } from "semantic-ui-react";
+
 import EntryDetails from "./EntryDetails";
 
 const PatientInfo: React.FC<{

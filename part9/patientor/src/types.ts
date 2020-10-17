@@ -4,6 +4,7 @@ export interface Diagnosis {
   latin?: string;
 }
 
+// PATIENT =============
 export enum Gender {
   Male = "male",
   Female = "female",
@@ -20,6 +21,9 @@ export interface Patient {
   entries: Entry[];
 }
 
+export type PatientFormValues = Omit<Patient, "id" | "entries">; // also on AddPatientForm.tsx?
+
+// ENTRY =============
 interface BaseEntry {
   id: string;
   description: string;
