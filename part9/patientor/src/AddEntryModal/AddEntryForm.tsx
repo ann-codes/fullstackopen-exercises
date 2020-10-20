@@ -2,8 +2,14 @@ import React from "react";
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField, SelectField, GenderOption } from "./FormField";
-import { Entry, Gender } from "../types";
+import { useStateValue } from "../state";
+import {
+  TextField,
+  SelectField,
+  EntryOption,
+  DiagnosisSelection,
+} from "./FormField";
+import { Entry } from "../types";
 
 export type EntryFormValues = Omit<Entry, "id">;
 
@@ -12,22 +18,25 @@ interface Props {
   onCancel: () => void;
 }
 
-const genderOptions: GenderOption[] = [
-  { value: Gender.Male, label: "Male" },
-  { value: Gender.Female, label: "Female" },
-  { value: Gender.Other, label: "Other" },
+const entryOptions: EntryOption[] = [
+  { value: "Hospital", label: "Hospital" },
+  { value: "OccupationalHealthcare", label: "Occupational Healthcare" },
+  { value: "HealthCheck", label: "Health Check" },
 ];
 
 export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
-  console.log(onSubmit, onCancel); //////////////
+  const [{ diagnosis }] = useStateValue();
+
+  console.log("FROM BACKEND?", onSubmit, onCancel);
+
   return (
     <Formik
       initialValues={{
         description: "",
         date: "",
         specialist: "",
-        diagnosisCodes: [""],
-        type: "Hospital"
+        diagnosisCodes: [],
+        type: "Hospital",
       }}
       onSubmit={onSubmit}
       validate={(values) => {
@@ -45,7 +54,7 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         return errors;
       }}
     >
-      {({ isValid, dirty }) => {
+      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
             <Field
@@ -66,7 +75,19 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               name="specialist"
               component={TextField}
             />
-            <SelectField label="Gender" name="gender" options={genderOptions} />
+
+            <DiagnosisSelection
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              diagnoses={Object.values(diagnosis)}
+            />
+
+            <SelectField
+              label="Entry Type"
+              name="type"
+              options={entryOptions}
+            />
+
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
