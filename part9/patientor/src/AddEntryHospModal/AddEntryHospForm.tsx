@@ -3,31 +3,20 @@ import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { useStateValue } from "../state";
-import {
-  TextField,
-  SelectField,
-  EntryOption,
-  DiagnosisSelection,
-} from "./FormField";
-import { Entry } from "../types";
+import { TextField, DiagnosisSelection } from "../components/FormField";
+import { HospitalEntry } from "../types";
 
-export type EntryFormValues = Omit<Entry, "id">;
+export type EntryHospFormValues = Omit<HospitalEntry, "id">;
 
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: EntryHospFormValues) => void;
   onCancel: () => void;
 }
 
-const entryOptions: EntryOption[] = [
-  { value: "Hospital", label: "Hospital" },
-  { value: "OccupationalHealthcare", label: "Occupational Healthcare" },
-  { value: "HealthCheck", label: "Health Check" },
-];
-
-export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnosis }] = useStateValue();
 
-  console.log("FROM BACKEND?", onSubmit, onCancel);
+  console.log("FROM PatientInfo.tsx", onSubmit, onCancel);
 
   return (
     <Formik
@@ -37,20 +26,28 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         specialist: "",
         diagnosisCodes: [],
         type: "Hospital",
+        discharge: { date: "", criteria: "" },
       }}
       onSubmit={onSubmit}
       validate={(values) => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
         if (!values.description) {
-          errors.name = requiredError;
+          errors.description = requiredError;
         }
         if (!values.date) {
-          errors.ssn = requiredError;
+          errors.date = requiredError;
         }
         if (!values.specialist) {
-          errors.dateOfBirth = requiredError;
+          errors.specialist = requiredError;
         }
+        if (!values.discharge.date) {
+          errors["discharge.date"] = requiredError;
+        }
+        if (!values.discharge.criteria) {
+          errors["discharge.criteria"] = requiredError;
+        }
+        // console.log("ERRORS", errors);
         return errors;
       }}
     >
@@ -70,24 +67,28 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               component={TextField}
             />
             <Field
-              label="Specialist"
+              label="Attending Specialist"
               placeholder="Specialist"
               name="specialist"
               component={TextField}
             />
-
             <DiagnosisSelection
               setFieldValue={setFieldValue}
               setFieldTouched={setFieldTouched}
               diagnoses={Object.values(diagnosis)}
             />
-
-            <SelectField
-              label="Entry Type"
-              name="type"
-              options={entryOptions}
+            <Field
+              label="Discharge Date"
+              placeholder="YYYY-MM-DD"
+              name="discharge.date"
+              component={TextField}
             />
-
+            <Field
+              label="Discharge Criteria"
+              placeholder="Criteria"
+              name="discharge.criteria"
+              component={TextField}
+            />
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
@@ -112,4 +113,4 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryForm;
+export default AddEntryHospForm;
