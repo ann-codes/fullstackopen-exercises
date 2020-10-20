@@ -4,16 +4,18 @@ import axios from "axios";
 import { Patient, Diagnosis } from "../types";
 import { Header, Card, Icon, Button } from "semantic-ui-react";
 
+import EntryDetails from "./EntryDetails";
 import { Entry } from "../types";
 import { apiBaseUrl } from "../constants";
-import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
-import EntryDetails from "./EntryDetails";
-import AddEntryModal from "../AddEntryModal";
+import AddEntryHospModal from "../AddEntryHospModal";
+
+export type NewEntryFromForm = Omit<Entry, "id">;
 
 const PatientInfo: React.FC<{
   patient: Patient;
   diagnosesCodes: Diagnosis[];
 }> = ({ patient, diagnosesCodes }) => {
+  const [entries, setEntries] = React.useState<Entry[] | undefined>([]);
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const openModal = (): void => setModalOpen(true);
@@ -22,19 +24,20 @@ const PatientInfo: React.FC<{
     setError(undefined);
   };
 
-  const submitNewEntry = async (values: EntryFormValues) => {
+  React.useEffect(() => {
+    setEntries(patient?.entries);
+  }, []);
+
+  const submitNewEntry = async (values: NewEntryFromForm) => {
     try {
-      ///////// Does not yet work
       const { data: newEntry } = await axios.post<Entry>(
-        `${apiBaseUrl}/patients`,
+        `${apiBaseUrl}/patients/${patient?.id}/entries`,
         values
       );
-
-      console.log(newEntry);
-      ////// dispatch goes here
+      setEntries(entries?.concat(newEntry));
       closeModal();
     } catch (e) {
-      console.error(e.response.data);
+      console.error("ERROR ======>", e.response.data);
       setError(e.response.data.error);
     }
   };
@@ -62,7 +65,7 @@ const PatientInfo: React.FC<{
     }
   };
 
-  const mapEntries = patient?.entries?.map((e) => {
+  const mapEntries = entries?.map((e) => {
     return (
       <Card fluid key={e.id} color="blue">
         <Card.Content>
@@ -111,14 +114,20 @@ const PatientInfo: React.FC<{
       <Header as="h3">Entries</Header>
 
       <p>
-        <AddEntryModal
+        <AddEntryHospModal
           modalOpen={modalOpen}
           onSubmit={submitNewEntry}
           error={error}
           onClose={closeModal}
         />
-        <Button onClick={() => openModal()}>
-          Add New Entry for {patient?.name}
+        <Button
+          basic
+          icon
+          onClick={() => openModal()}
+          labelPosition="right"
+          color="blue"
+        >
+          New Hospital Entry <Icon name="hospital" />
         </Button>
       </p>
 

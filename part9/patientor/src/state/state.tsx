@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { Patient, Diagnosis } from "../types";
-
 import { Action } from "./reducer";
 
 // https://fullstackopen.com/en/part9/react_with_types#state-handling
