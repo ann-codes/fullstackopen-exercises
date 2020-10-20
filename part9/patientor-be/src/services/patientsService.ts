@@ -31,7 +31,9 @@ const addPatient = (patient: NewPatient): Patient => {
 };
 
 const addEntry = (entry: Entry, patientId: string): Entry | void => {
+  console.log(entry);
   // trying to error handle, WIP
+
   const foundPatient = getPatientById(patientId);
   if (typeof foundPatient === "object") {
     try {

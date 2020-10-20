@@ -4,10 +4,13 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { Patient, Diagnosis } from "../types";
+import { useStateValue, setDiagnosisList } from "../state";
 
 import PatientInfo from "./PatientInfo";
 
 const PatientInfoPage: React.FC = () => {
+  const [, dispatch] = useStateValue();
+
   const { id } = useParams<{ id: string }>();
 
   const [patient, setPatient] = React.useState<Patient>();
@@ -31,7 +34,8 @@ const PatientInfoPage: React.FC = () => {
     const getDiagnosesCode = async () => {
       try {
         const codes = await axios.get<Diagnosis[]>(`${apiBaseUrl}/diagnoses/`);
-        setDiagnosesCodes(codes.data);
+        setDiagnosesCodes(codes.data); /// keeping original version, refactor later?
+        dispatch(setDiagnosisList(codes.data));
       } catch (e) {
         console.error(e.response.data);
       }
