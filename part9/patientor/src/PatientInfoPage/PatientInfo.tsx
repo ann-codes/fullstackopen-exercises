@@ -1,13 +1,14 @@
 import React, { Fragment } from "react";
 import axios from "axios";
 
-import { Patient, Diagnosis } from "../types";
+import { apiBaseUrl } from "../constants";
+import { Patient, Diagnosis, Entry } from "../types";
 import { Header, Card, Icon, Button } from "semantic-ui-react";
 
 import EntryDetails from "./EntryDetails";
-import { Entry } from "../types";
-import { apiBaseUrl } from "../constants";
 import AddEntryHospModal from "../AddEntryHospModal";
+import AddEntryHCheckModal from "../AddEntryHCheckModal";
+import AddEntryOHcModal from "../AddEntryOHcModal";
 
 export type NewEntryFromForm = Omit<Entry, "id">;
 
@@ -16,11 +17,29 @@ const PatientInfo: React.FC<{
   diagnosesCodes: Diagnosis[];
 }> = ({ patient, diagnosesCodes }) => {
   const [entries, setEntries] = React.useState<Entry[] | undefined>([]);
-  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+
+  // Hospital
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const openModal = (): void => setModalOpen(true);
   const closeModal = (): void => {
     setModalOpen(false);
+    setError(undefined);
+  };
+
+  // Health check
+  const [modalHCOpen, setModalHCOpen] = React.useState<boolean>(false);
+  const openHCModal = (): void => setModalHCOpen(true);
+  const closeHCModal = (): void => {
+    setModalHCOpen(false);
+    setError(undefined);
+  };
+
+  // Occupational
+  const [modalOHcOpen, setModalOHcOpen] = React.useState<boolean>(false);
+  const openOHcModal = (): void => setModalOHcOpen(true);
+  const closeOHcModal = (): void => {
+    setModalOHcOpen(false);
     setError(undefined);
   };
 
@@ -36,6 +55,8 @@ const PatientInfo: React.FC<{
       );
       setEntries(entries?.concat(newEntry));
       closeModal();
+      closeHCModal();
+      closeOHcModal();
     } catch (e) {
       console.error("ERROR ======>", e.response.data);
       setError(e.response.data.error);
@@ -114,6 +135,22 @@ const PatientInfo: React.FC<{
       <Header as="h3">Entries</Header>
 
       <p>
+        <AddEntryHCheckModal
+          modalOpen={modalHCOpen}
+          onSubmit={submitNewEntry}
+          error={error}
+          onClose={closeHCModal}
+        />
+        <Button
+          basic
+          icon
+          onClick={() => openHCModal()}
+          labelPosition="right"
+          color="blue"
+        >
+          New Health Check Entry <Icon name="doctor" />
+        </Button>
+
         <AddEntryHospModal
           modalOpen={modalOpen}
           onSubmit={submitNewEntry}
@@ -128,6 +165,22 @@ const PatientInfo: React.FC<{
           color="blue"
         >
           New Hospital Entry <Icon name="hospital" />
+        </Button>
+
+        <AddEntryOHcModal
+          modalOpen={modalOHcOpen}
+          onSubmit={submitNewEntry}
+          error={error}
+          onClose={closeOHcModal}
+        />
+        <Button
+          basic
+          icon
+          onClick={() => openOHcModal()}
+          labelPosition="right"
+          color="blue"
+        >
+          New Occupational Health Care Entry <Icon name="stethoscope" />
         </Button>
       </p>
 

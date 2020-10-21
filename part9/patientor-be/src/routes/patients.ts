@@ -21,7 +21,6 @@ patientRouter.get("/:id", (req, res) => {
 
 patientRouter.post("/:id/entries", (req, res) => {
   const id = req.params.id;
-  // trying to error handle, WIP
   const patient = patientSvs.getPatientById(id);
   if (patient) {
     try {
@@ -29,13 +28,10 @@ patientRouter.post("/:id/entries", (req, res) => {
       const addedEntry = patientSvs.addEntry(newEntry, id);
       res.json(addedEntry);
     } catch (e) {
-      // res.status errors not sending?
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       res.status(400).send(e.message);
     }
   } else {
-    // trying to error handle, WIP
     console.error(`Patient ID ${id} not found.`);
     res.status(400).send(`Patient ID ${id} not found.`);
   }

@@ -3,19 +3,22 @@ import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
 import { useStateValue } from "../state";
-import { TextField, DiagnosisSelection } from "../components/FormField";
-import { HospitalEntry } from "../types";
+import {
+  TextField,
+  DiagnosisSelection,
+  NumberField,
+} from "../components/FormField";
+import { HealthCheckEntry } from "../types";
 
-export type EntryHospFormValues = Omit<HospitalEntry, "id">;
+export type EntryHCheckFormValues = Omit<HealthCheckEntry, "id">;
 
 interface Props {
-  onSubmit: (values: EntryHospFormValues) => void;
+  onSubmit: (values: EntryHCheckFormValues) => void;
   onCancel: () => void;
 }
 
-export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddEntryHCheckForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnosis }] = useStateValue();
-
   return (
     <Formik
       initialValues={{
@@ -23,12 +26,12 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         date: "",
         specialist: "",
         diagnosisCodes: [],
-        type: "Hospital",
-        discharge: { date: "", criteria: "" },
+        type: "HealthCheck",
+        healthCheckRating: -1,
       }}
       onSubmit={onSubmit}
       validate={(values) => {
-        const requiredError = "Field is required";
+        const requiredError = "Field is required.";
         const errors: { [field: string]: string } = {};
         if (!values.description) {
           errors.description = requiredError;
@@ -39,13 +42,13 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
-        if (!values.discharge.date) {
-          errors["discharge.date"] = requiredError;
+        if (!values.healthCheckRating) {
+          errors.healthCheckRating = requiredError;
         }
-        if (!values.discharge.criteria) {
-          errors["discharge.criteria"] = requiredError;
+        if (values.healthCheckRating > 3 || values.healthCheckRating < 0) {
+          errors.healthCheckRating =
+            "Rating must be from 0 for healthy to 3 for critical.";
         }
-        // console.log("ERRORS", errors);
         return errors;
       }}
     >
@@ -76,17 +79,13 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               diagnoses={Object.values(diagnosis)}
             />
             <Field
-              label="Discharge Date"
-              placeholder="YYYY-MM-DD"
-              name="discharge.date"
-              component={TextField}
+              label="Health Rating (0 for Healthy to 3 for Critical)"
+              name="healthCheckRating"
+              component={NumberField}
+              min={0}
+              max={3}
             />
-            <Field
-              label="Discharge Criteria"
-              placeholder="Criteria"
-              name="discharge.criteria"
-              component={TextField}
-            />
+
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
@@ -111,4 +110,4 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryHospForm;
+export default AddEntryHCheckForm;

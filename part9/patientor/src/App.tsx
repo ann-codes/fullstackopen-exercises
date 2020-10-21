@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import { Button, Divider, Header, Container } from "semantic-ui-react";
+import { Button, Divider, Header, Container, Icon } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
 import { useStateValue, setPatientList } from "./state";
@@ -30,17 +30,33 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Router>
+        <Divider hidden />
+        <Divider />
+        <Divider hidden />
         <Container>
-          <Header as="h1">Patientor</Header>
           <Button as={Link} to="/" primary>
             Home
           </Button>
-          <Divider hidden />
+          <Divider />
+          <Header as="h1" icon textAlign="center">
+            <Icon name="universal access" circular color="teal" />
+            <Header.Content color="blue">Patientor App</Header.Content>
+            <Header.Subheader>
+              All your patient information at your fingertips.
+            </Header.Subheader>
+          </Header>
+
+          <Divider />
+
           <Switch>
             <Route exact path="/" render={() => <PatientListPage />} />
             <Route exact path="/patients/:id" component={PatientInfoPage} />
           </Switch>
         </Container>
+        <Divider hidden />
+        <Divider hidden />
+        <Divider />
+        <Divider hidden />
       </Router>
     </div>
   );

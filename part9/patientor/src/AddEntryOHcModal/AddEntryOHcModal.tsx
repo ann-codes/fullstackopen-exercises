@@ -4,18 +4,17 @@ import { Field, Formik, Form } from "formik";
 
 import { useStateValue } from "../state";
 import { TextField, DiagnosisSelection } from "../components/FormField";
-import { HospitalEntry } from "../types";
+import { OccupationalHealthcareEntry } from "../types";
 
-export type EntryHospFormValues = Omit<HospitalEntry, "id">;
+export type EntryOHcFormValues = Omit<OccupationalHealthcareEntry, "id">;
 
 interface Props {
-  onSubmit: (values: EntryHospFormValues) => void;
+  onSubmit: (values: EntryOHcFormValues) => void;
   onCancel: () => void;
 }
 
-export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+export const AddEntryOHcForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnosis }] = useStateValue();
-
   return (
     <Formik
       initialValues={{
@@ -23,12 +22,13 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         date: "",
         specialist: "",
         diagnosisCodes: [],
-        type: "Hospital",
-        discharge: { date: "", criteria: "" },
+        type: "OccupationalHealthcare",
+        employerName: "",
+        sickLeave: { startDate: "", endDate: "" },
       }}
       onSubmit={onSubmit}
       validate={(values) => {
-        const requiredError = "Field is required";
+        const requiredError = "Field is required.";
         const errors: { [field: string]: string } = {};
         if (!values.description) {
           errors.description = requiredError;
@@ -39,13 +39,10 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
-        if (!values.discharge.date) {
-          errors["discharge.date"] = requiredError;
+        if (!values.employerName) {
+          errors.employerName = requiredError;
         }
-        if (!values.discharge.criteria) {
-          errors["discharge.criteria"] = requiredError;
-        }
-        // console.log("ERRORS", errors);
+
         return errors;
       }}
     >
@@ -76,15 +73,21 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               diagnoses={Object.values(diagnosis)}
             />
             <Field
-              label="Discharge Date"
-              placeholder="YYYY-MM-DD"
-              name="discharge.date"
+              label="Employer Name"
+              placeholder="EmployerName"
+              name="employerName"
               component={TextField}
             />
             <Field
-              label="Discharge Criteria"
-              placeholder="Criteria"
-              name="discharge.criteria"
+              label="Sick Leave Start Date"
+              placeholder="YYYY-MM-DD"
+              name="sickLeave.startDate"
+              component={TextField}
+            />
+            <Field
+              label="Sick Leave End Date"
+              placeholder="YYYY-MM-DD"
+              name="sickLeave.endDate"
               component={TextField}
             />
             <Grid>
@@ -111,4 +114,4 @@ export const AddEntryHospForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryHospForm;
+export default AddEntryOHcForm;
