@@ -74,6 +74,7 @@ Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS fra
   - c Typing the express app
     - Note: running `tsc` will build the project
   - d React with types
+  - Note: see [part 9 readme for sample screenshots](/part9/) and [tweet with gif](https://twitter.com/AnnCodes/status/1318719990489645059). 
 - Part 10 React Native 
   - https://fullstackopen.com/en/part10
   - Notes: This was recently released on Sept 1, 2020 after I started working on FSO in late July. I will likely delay working on this Part until much later as I do not quite want to get into mobile dev at this time. 
