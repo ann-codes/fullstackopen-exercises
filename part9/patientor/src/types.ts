@@ -21,7 +21,7 @@ export interface Patient {
   entries: Entry[];
 }
 
-export type PatientFormValues = Omit<Patient, "id" | "entries">; // also on AddPatientForm.tsx?
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
 // ENTRY =============
 interface BaseEntry {
@@ -56,8 +56,8 @@ export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
   sickLeave?: {
-    startDate: string;
-    endDate: string;
+    startDate?: string;
+    endDate?: string;
   };
 }
 

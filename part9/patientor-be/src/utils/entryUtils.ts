@@ -9,9 +9,18 @@ const isString = (text: any): text is string => {
   return typeof text === "string" || text instanceof String;
 };
 
-const isDate = (date: string): boolean => {
-  return Boolean(Date.parse(date));
-};
+////////// sick leave is supposed to be optional so parsing causes errors?
+// const isDate = (date: string): boolean => {
+//   return Boolean(Date.parse(date));
+// };
+
+// const parseSickLeave = (dates: any) => {
+//   if (!isDate(dates.startDate) || !isDate(dates.endDate)) {
+//     throw new Error(`Incorrect or missing ${dates}`);
+//   }
+//   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+//   return dates;
+// };
 
 const parseStringType = (element: any, typeName: string): string => {
   if (!element || !isString(element)) {
@@ -38,14 +47,6 @@ const parseDischarge = (discharge: { date: string; criteria: string }) => {
   } else {
     throw new Error(`Incorrect or missing ${discharge}`);
   }
-};
-
-const parseSickLeave = (dates: any) => {
-  if (!isDate(dates.startDate) || !isDate(dates.endDate)) {
-    throw new Error(`Incorrect or missing ${dates}`);
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return dates;
 };
 
 const parseBaseEntry = (object: any): Omit<BaseEntry, "id"> => {
@@ -77,8 +78,9 @@ const toNewEntry = (object: any) => {
         ...parseBaseEntry(object),
         type: "OccupationalHealthcare",
         employerName: parseStringType(object.employerName, "employerName"),
+        // sickLeave: parseSickLeave(object.sickLeave), //// cannot parse when optional? 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sickLeave: parseSickLeave(object.sickLeave),
+        sickLeave: object.sickLeave
       };
     default:
       throw new Error(`Wrong or missing entry: ${object}`);

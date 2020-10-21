@@ -24,7 +24,7 @@ const PatientInfoPage: React.FC = () => {
         );
         setPatient(patientInfo.data);
       } catch (e) {
-        console.error("ERROR =====>", e.response.data);
+        console.error("ERROR =====>", e.response?.data);
       }
     };
     fetchPatientById();
@@ -37,7 +37,7 @@ const PatientInfoPage: React.FC = () => {
         setDiagnosesCodes(codes.data); /// keeping original version, refactor later?
         dispatch(setDiagnosisList(codes.data));
       } catch (e) {
-        console.error(e.response.data);
+        console.error("ERROR =====>", e.response?.data);
       }
     };
     getDiagnosesCode();
