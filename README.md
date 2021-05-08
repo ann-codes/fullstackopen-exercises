@@ -5,9 +5,7 @@
 
 This is a repo of my exercise solutions following the University of Helsinki [Full Stack Open 2020](https://fullstackopen.com/en) course. 
 
-Note: Some folders will require deleting the yarn.lock file in order to install node_modules and run server (later added to .gitignore).
-
-Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS framework for fun.
+Note: Some folders will require deleting the yarn.lock file in order to install node_modules and run server (later added to .gitignore). Some exercises uses [Pure CSS](https://purecss.io/), a super lightweight CSS framework for fun. You can find my brief [notes about FSO here](Notes.md). 
 
 ## Course Contents
 
